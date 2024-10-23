@@ -2,7 +2,7 @@ import { Box, CloseButton, Divider, Flex, Text, useColorModeValue } from "@chakr
 import NavItem from "./NavItem";
 import Image from "next/image";
 import Link from "next/link";
-import { LINK_DATA, APP_NAME, OTHER_GAMES } from "@yeardle/constants/AppConfig";
+import { LINK_DATA, APP_NAME } from "@yeardle/constants/AppConfig";
 import { usePathname } from "next/navigation";
 
 const SidebarContent = ({ onClose, ...rest }) => {
@@ -42,19 +42,6 @@ const SidebarContent = ({ onClose, ...rest }) => {
           onClick={onClose}
           className={pathname === link.url ? "active-item-slider-bar" : "item-slider-bar"}
           icon={link.icon}
-        >
-          {link.name}
-        </NavItem>
-      ))}
-      <Divider me={4} mt={4} />
-      {OTHER_GAMES.map((link, index) => (
-        <NavItem
-          key={index}
-          url={link.url}
-          onClick={onClose}
-          className={pathname === link.url ? "active-item-slider-bar" : "item-slider-bar"}
-          logo={link.logo}
-          isNewTab={true}
         >
           {link.name}
         </NavItem>

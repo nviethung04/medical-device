@@ -1,9 +1,6 @@
-import { HOME_FAQS, APP_URL, APP_NAME } from "@yeardle/constants/AppConfig";
+import { APP_URL, APP_NAME } from "@yeardle/constants/AppConfig";
 import META_DATA from "./metaData";
-import RecommendGamesComponent from "@yeardle/components/RecommendGamesComponent";
-import FaQsComponent from "@yeardle/components/FaQsComponent";
-import { Box, Divider, Flex, Heading, Image, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
-import FunctionGameComponent from "./FunctionGame/FunctionGameComponent";
+import { Box, Heading, Text } from "@chakra-ui/react";
 
 export const metadata = {
   title: `${APP_NAME} | ${META_DATA.TITLE}`,
@@ -22,7 +19,14 @@ export const metadata = {
 const HomePage = () => {
   return (
     <Box position="relative">
-      
+      <Box>
+        <Heading as="h1" size="2xl" textAlign="center">
+          Sắp ra mắt
+        </Heading>
+        <Text textAlign="center" fontSize="xl">
+          Dự án quản lý thiết bị y tế
+        </Text>
+      </Box>
     </Box>
   );
 };
