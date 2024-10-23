@@ -1,0 +1,213 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  width: 100%;
+  height: 100%;
+}
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-y-scroll {
+  overflow-y: auto;
+}
+.position-relative {
+  position: relative;
+}
+.header-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  z-index: 999;
+}
+.me-item-header-2 {
+  margin-right: 0.5rem;
+}
+.item-header-custom .text-menu-header {
+  display: none;
+  font-size: 1.3rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.item-header-custom .text-menu-header .bx {
+  font-size: 1.5rem;
+  margin-right: 5px;
+  transform: translateY(3px);
+}
+.item-header-custom .text-menu-header:hover {
+  text-decoration: underline;
+}
+.item-mobile-hidden {
+  display: none;
+}
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.h-100 {
+  height: 100%;
+}
+.item-slider-bar:hover{
+  transition: all 0.2s;
+  border-left: 4px solid #07f;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+.active-item-slider-bar {
+  border-left: 4px solid #07f;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  background-color: #E2E8F0;
+  font-weight: 500;
+}
+.chakra-ui-dark .active-item-slider-bar{
+  background-color: #2d3748;
+}
+.w-100 {
+  width: 100%;
+}
+@media (min-width: 1024px) {
+  .item-mobile-hidden {
+    display: block;
+ }
+  .item-header-custom.me-item-header-2 {
+    margin-right: 1rem;
+ }
+  .item-header-custom .text-menu-header {
+    display: block;
+ }
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.header-text-table {
+  font-size: 0.8rem;
+  font-weight: 500;
+  position: sticky;
+}
+.header-text-table th {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.question {
+  margin-bottom: 20px;
+}
+.question h3 {
+  font-size: 1.1rem;
+}
+.question .list-info .info-item {
+  width: 70px;
+  position: relative;
+  height: 70px;
+}
+.question .list-info .info-item span {
+  font-size: 0.7em;
+  line-height: normal;
+  color: white;
+}
+.time-count {
+  font-size: 20px;
+  font-weight: 500;
+}
+.time-count .time-count-item {
+  margin-right: 10px;
+  font-size: 30px;
+  font-weight: 400;
+}
+.statics-modal .list-group-item {
+  display: flex;
+  flex-direction: column;
+}
+.statics-modal .list-group-item span {
+  text-align: center;
+}
+.statics-modal .list-group-item .text-number {
+  font-size: 1.25rem;
+}
+.statics-modal .list-group-item .text-description {
+  font-size: 0.9rem;
+}
+.chakra-ui-dark .btn-guess-game {
+  background-color: #161515;
+  color: white;
+  border: 1px solid #9c9494;
+}
+.chakra-ui-dark .box-input-action .input-country-form {
+  background-color: #3a3838 !important;
+}
+.chakra-ui-dark .box-input-action .input-country-form .input-country {
+  background-color: #3a3838 !important;
+}
+.chakra-ui-dark .box-input-action .input-country-form .input-country .rbt-input-main {
+  background-color: #3a3838 !important;
+}
+.chakra-ui-dark .box-input-action .input-country-form .rbt-menu {
+  background-color: #3a3838 !important;
+}
+.chakra-ui-dark .box-input-action .input-country-form .rbt-menu .dropdown-item:hover {
+  background-color: #242222 !important;
+}
+.chakra-ui-dark .time-count {
+  color: white;
+}
+.chakra-ui-dark .time-count .time-count-item {
+  color: white;
+}
+.bg-color-linear {
+  background: linear-gradient(to bottom, #87ceeb, #fff);
+}
+.icon-header{
+  border: 1px solid #e2e8f0;
+  background-color: #ebedf3;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.icon-header:hover{
+  background-color: #E6F3E6;
+}
+.header-active{
+  color: #6bba6b;
+}
+.chakra-ui-dark .icon-header{
+  border: 1px solid #2d3748;
+  background-color: #2d3748;
+}
+.header-active-icon{
+  background-color: #E6F3E6 !important;
+  color: #6bba6b !important;
+}
+.chakra-ui-dark .header-active-icon{
+  background-color: #2d3748 !important;
+  color: #6bba6b !important;
+}
+
+.modal-header{
+  background-color: #E5ECFF;
+}
+
+.chakra-ui-dark .modal-header{
+  background-color: #313448;
+}

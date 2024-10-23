@@ -1,0 +1,23 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "no-unused-vars": "warn", // Cảnh báo về biến không sử dụng
+    "no-undef": "error", // Báo lỗi khi sử dụng biến chưa được khai báo
+    "no-debugger": "error", // Báo lỗi khi sử dụng debugger
+    "react/no-unescaped-entities": "off", // Tắt cảnh báo về ký tự không được escape
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off", // Tắt kiểm tra prop-types nếu bạn không dùng
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
+  }
+}
