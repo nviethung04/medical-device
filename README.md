@@ -42,3 +42,166 @@
 ## 10. Dự báo tiêu thụ vật tư (Supply Forecasting)
 - **Consumption History Page**: Hiển thị lịch sử mua bán và sử dụng vật tư của khách hàng.
 - **Supply Forecasting Page**: Trang tính toán và hiển thị dự báo lượng vật tư còn lại dựa trên mức tiêu thụ trung bình của khách hàng, có cảnh báo khi gần hết vật tư.
+
+
+# MongoDB Sample Database Structure
+
+## Collection: products (Sản phẩm/Hàng hóa)
+```json
+{
+   "_id": ObjectId("..."),
+   "name": "Tên sản phẩm",
+   "category": "Loại máy/vật tư",
+   "stock": {
+       "quantity": 100,
+       "entry_date": "2024-01-15",
+       "expiry_date": "2025-01-15",
+       "certificates": ["ISO", "FDA", "CE"]
+   },
+   "hardware": {
+       "details": "Thông tin phần cứng",
+       "model": "Mã model",
+       "serial_number": "12345"
+   },
+   "software": {
+       "version": "1.0",
+       "update_date": "2023-12-01"
+   },
+   "user_manual": "Link hoặc mô tả hướng dẫn sử dụng",
+   "status": "Đang sử dụng" 
+}
+```
+
+## Collection: stock_transactions (Nhập/Xuất kho)
+```json
+{
+   "_id": ObjectId("..."),
+   "product_id": ObjectId("..."),
+   "transaction_type": "Nhập" | "Xuất",
+   "transaction_date": "2024-01-15",
+   "quantity": 50,
+   "batch_number": "Lô hàng A123",
+   "handled_by": "Tên người thực hiện",
+   "comments": "Ghi chú thêm"
+}
+```
+
+## Collection: customers (Khách hàng)
+```json
+{
+   "_id": ObjectId("..."),
+   "name": "Tên khách hàng",
+   "address": "Địa chỉ",
+   "contact_info": {
+       "phone": "Số điện thoại",
+       "email": "Email"
+   },
+   "purchase_history": [
+       {
+           "product_id": ObjectId("..."),
+           "purchase_date": "2024-01-15",
+           "quantity": 100,
+           "price": 5000,
+           "warranty_end_date": "2025-01-15",
+           "maintenance_schedule": [
+               {
+                   "maintenance_date": "2024-07-15",
+                   "status": "Đã hoàn thành"
+               }
+           ]
+       }
+   ]
+}
+```
+
+## Collection: warranty (Bảo hành và bảo trì)
+```json
+{
+   "_id": ObjectId("..."),
+   "customer_id": ObjectId("..."),
+   "product_id": ObjectId("..."),
+   "warranty_start_date": "2024-01-15",
+   "warranty_end_date": "2025-01-15",
+   "maintenance_schedule": [
+       {
+           "maintenance_date": "2024-07-15",
+           "status": "Chưa hoàn thành"
+       }
+   ],
+   "consumables_warning": {
+       "expected_consumption": 30,
+       "current_stock": 50,
+       "warning_level": 20
+   }
+}
+```
+
+## Collection: user_roles (Quản lý quyền người dùng)
+```json
+{
+   "_id": ObjectId("..."),
+   "user_id": ObjectId("..."),
+   "role": "Admin" | "Quản lý kho" | "Nhân viên bán hàng" | "Kỹ thuật viên",
+   "permissions": [
+       "Xem sản phẩm",
+       "Thêm sản phẩm",
+       "Xuất kho",
+       "Quản lý bảo hành",
+       "Báo cáo doanh thu"
+   ]
+}
+```
+
+## Collection: stock_alerts (Cảnh báo hàng hóa)
+```json
+{
+   "_id": ObjectId("..."),
+   "product_id": ObjectId("..."),
+   "alert_type": "Hết hàng" | "Hết hạn sử dụng",
+   "alert_date": "2024-01-20",
+   "quantity_left": 10,
+   "expiry_date": "2024-02-01",
+   "status": "Chưa xử lý"
+}
+```
+
+## Collection: reports (Báo cáo)
+```json
+{
+   "_id": ObjectId("..."),
+   "report_type": "Báo cáo doanh thu" | "Báo cáo tồn kho",
+   "generated_on": "2024-01-15",
+   "data": {
+       "total_sales": 10000,
+       "total_inventory": 500,
+       "pending_warranty": 5
+   }
+}
+```
+
+## Collection: consumption_forecasts (Dự báo tiêu thụ vật tư)
+```json
+{
+   "_id": ObjectId("..."),
+   "customer_id": ObjectId("..."),
+   "product_id": ObjectId("..."),
+   "average_consumption": 30,
+   "current_stock": 100,
+   "forecasted_reorder_date": "2024-02-15",
+   "alert_status": "Đã cảnh báo" | "Chưa cảnh báo"
+}
+```
+
+## Collection: maintenance_records (Quản lý bảo trì và sửa chữa)
+```json
+{
+   "_id": ObjectId("..."),
+   "product_id": ObjectId("..."),
+   "maintenance_date": "2024-02-01",
+   "cost": 1000,
+   "status": "Hoàn thành",
+   "repair_details": "Thông tin chi tiết về sửa chữa",
+   "external_service_provider": "Tên đơn vị bảo trì ngoài"
+}
+```
+
