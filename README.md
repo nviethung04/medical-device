@@ -205,3 +205,66 @@
 }
 ```
 
+
+# Phiên bản cũ
+
+## Quản lý hàng hóa
+- **Chi tiết sản phẩm**: Bao gồm thông tin ngày nhập kho, ngày hết hạn (đối với vật tư), số lượng, loại máy, và các chứng chỉ kèm theo (ISO, FDA, CE...).
+- **Quản lý kiểm chuẩn định kỳ**: Hệ thống tự động cảnh báo khi đến hạn kiểm chuẩn lại các thiết bị y tế và vật tư.
+- **Thông tin chi tiết về thiết bị**: Bao gồm phần cứng, phần mềm, và hướng dẫn sử dụng chi tiết cho mỗi loại máy.
+- **Tình trạng thiết bị**: Theo dõi trạng thái hoạt động của máy (đang sử dụng, bảo hành, hoặc cần bảo trì).
+
+## Xuất nhập tồn
+- **Quản lý chi tiết nhập/xuất**: Theo dõi từng lần nhập kho và xuất kho kèm theo mã sản phẩm, ngày, số lượng và người thực hiện.
+- **Báo cáo hàng tồn kho**: Tự động cập nhật và hiển thị báo cáo về tình trạng hàng tồn theo thời gian thực.
+- **Theo dõi lô hàng**: Theo dõi từng lô hàng, từ khi nhập kho đến khi xuất ra cho khách hàng, bao gồm cả lô hàng gần hết hạn sử dụng.
+
+## Quản lý dữ liệu khách hàng
+- **Thông tin khách hàng**: Bao gồm tên, địa chỉ, lịch sử mua hàng, hợp đồng, và thông tin liên hệ.
+- **Lịch sử bảo hành và bảo trì**: Theo dõi lịch sử các dịch vụ bảo hành, bảo trì cho từng khách hàng.
+- **Quản lý hợp đồng**: Theo dõi các hợp đồng dịch vụ, hỗ trợ và điều khoản liên quan.
+
+## Quản lý thời gian bảo hành (vật tư tiêu hao)
+- **Cảnh báo bảo hành**: Hệ thống gửi cảnh báo khi gần đến thời hạn bảo hành hoặc thay thế vật tư tiêu hao.
+- **Lịch bảo trì định kỳ**: Quản lý lịch trình bảo trì và nhắc nhở cho khách hàng để gia hạn hợp đồng bảo hành.
+
+## Cảnh báo hàng hóa
+- **Cảnh báo hết hàng**: Tự động gửi cảnh báo khi số lượng hàng tồn kho đạt mức tối thiểu và cần đặt thêm.
+- **Theo dõi hạn sử dụng**: Nhắc nhở nhập thêm vật tư hoặc thiết bị sắp hết hạn để tránh lãng phí.
+
+## Quản lý bảo trì và sửa chữa
+- Theo dõi lịch trình bảo trì, chi phí sửa chữa, và tình trạng hiện tại của các thiết bị. Có thể tích hợp với các dịch vụ bên ngoài.
+
+## Báo cáo và phân tích
+- Báo cáo theo dõi doanh thu, nhập/xuất tồn, tình trạng bảo hành, và tình trạng khách hàng. Hỗ trợ phân tích xu hướng và đưa ra quyết định.
+
+## Quản lý quyền người dùng
+- Phân quyền sử dụng hệ thống cho các vai trò khác nhau (quản lý kho, bán hàng, kỹ thuật bảo trì).
+
+Việc bổ sung các tính năng này sẽ giúp quản lý thiết bị y tế hiệu quả hơn và đáp ứng các yêu cầu về kiểm chuẩn, bảo hành, và cảnh báo hàng hóa.
+
+### Cách hoạt động của hệ thống dự báo tiêu thụ vật tư:
+
+#### 1. Lưu trữ lịch sử mua bán:
+- Mỗi lần khách hàng mua vật tư, hệ thống sẽ ghi nhận số lượng vật tư đã bán, thời gian mua, và thông tin liên quan (đơn giá, số lô, mã vật tư, ngày giao hàng).
+
+#### 2. Theo dõi tiêu thụ trung bình:
+- Dựa trên lịch sử các giao dịch trước đó, hệ thống sẽ tính toán mức tiêu thụ trung bình của từng loại vật tư. Ví dụ, nếu khách mua 100 đơn vị vật tư mỗi 3 tháng, hệ thống sẽ ghi nhận mức tiêu thụ trung bình là 33 đơn vị mỗi tháng.
+
+#### 3. Dự báo lượng vật tư còn lại:
+- Sau khi bán hàng, hệ thống sẽ tự động trừ đi lượng vật tư đã giao từ lượng tiêu thụ dự kiến của khách hàng. Khi lượng còn lại thấp hơn một mức nhất định (ví dụ 20% so với lượng tiêu thụ trung bình), hệ thống sẽ cảnh báo bạn.
+
+#### 4. Thông báo và đề xuất bán hàng:
+- Khi hệ thống dự đoán khách hàng sắp hết vật tư, nó sẽ gửi thông báo cho bạn. Bạn có thể chủ động liên hệ với khách hàng để chào bán thêm vật tư trước khi họ cần.
+
+#### Ví dụ cụ thể:
+- Khách hàng A mua 200 đơn vị vật tư vào tháng 1, và bạn theo dõi rằng họ thường sử dụng 50 đơn vị mỗi tháng.
+- Đến tháng 4, hệ thống sẽ ước lượng khách hàng còn khoảng 50 đơn vị (200 - 150 đơn vị tiêu thụ). Khi lượng này xuống dưới 50 (ví dụ 40), hệ thống sẽ gửi cảnh báo để bạn liên hệ khách hàng chào bán thêm.
+
+#### Các tính năng cần thiết:
+- **Tính toán mức tiêu thụ trung bình**: Tính toán tự động dựa trên lịch sử giao dịch của khách.
+- **Cảnh báo tự động**: Khi vật tư gần hết, hệ thống sẽ gửi thông báo.
+- **Lịch sử giao dịch**: Lưu trữ chi tiết mỗi lần mua hàng để dự đoán chính xác hơn.
+- **Báo cáo sử dụng vật tư**: Hỗ trợ báo cáo chi tiết về mức tiêu thụ của khách hàng theo thời gian, giúp phân tích nhu cầu và lập kế hoạch bán hàng.
+
+
