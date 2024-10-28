@@ -1,14 +1,6 @@
 import React from "react";
 // mui imports
-import {
-  ListItemIcon,
-  ListItem,
-  List,
-  styled,
-  ListItemText,
-  useTheme,
-  ListItemButton,
-} from "@mui/material";
+import { ListItemIcon, ListItem, List, styled, ListItemText, useTheme, ListItemButton } from "@mui/material";
 import Link from "next/link";
 
 const NavItem = ({ item, level, pathDirect, onClick }) => {
@@ -28,17 +20,17 @@ const NavItem = ({ item, level, pathDirect, onClick }) => {
       paddingLeft: "10px",
       "&:hover": {
         backgroundColor: theme.palette.primary.light,
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.main
       },
       "&.Mui-selected": {
         color: "white",
         backgroundColor: theme.palette.primary.main,
         "&:hover": {
           backgroundColor: theme.palette.primary.main,
-          color: "white",
-        },
-      },
-    },
+          color: "white"
+        }
+      }
+    }
   }));
 
   return (
@@ -56,7 +48,7 @@ const NavItem = ({ item, level, pathDirect, onClick }) => {
             sx={{
               minWidth: "36px",
               p: "3px 0",
-              color: "inherit",
+              color: "inherit"
             }}
           >
             {itemIcon}

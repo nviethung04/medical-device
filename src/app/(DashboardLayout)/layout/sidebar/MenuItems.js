@@ -1,3 +1,4 @@
+import { IconBellRinging } from "@tabler/icons-react";
 import {
   IconAperture,
   IconCopy,
@@ -5,7 +6,7 @@ import {
   IconLogin,
   IconMoodHappy,
   IconTypography,
-  IconUserPlus,
+  IconUserPlus
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -13,63 +14,69 @@ import { uniqueId } from "lodash";
 const Menuitems = [
   {
     navlabel: true,
-    subheader: "Home",
+    subheader: "Tổng quan"
   },
 
   {
     id: uniqueId(),
-    title: "Dashboard",
+    title: "Bảng điều khiển",
     icon: IconLayoutDashboard,
-    href: "/",
+    href: "/"
+  },
+  {
+    id: uniqueId(),
+    title: "Thông báo",
+    icon: IconBellRinging,
+    href: "/notifications"
   },
   {
     navlabel: true,
-    subheader: "Utilities",
+    subheader: "Utilities"
   },
   {
     id: uniqueId(),
     title: "Typography",
     icon: IconTypography,
-    href: "/utilities/typography",
+    href: "/utilities/typography"
   },
   {
     id: uniqueId(),
     title: "Shadow",
     icon: IconCopy,
-    href: "/utilities/shadow",
+    href: "/utilities/shadow"
   },
   {
     navlabel: true,
-    subheader: "Auth",
+    subheader: "Auth"
   },
   {
     id: uniqueId(),
     title: "Login",
     icon: IconLogin,
-    href: "/authentication/login",
+    href: "/authentication/login"
   },
   {
     id: uniqueId(),
     title: "Register",
     icon: IconUserPlus,
-    href: "/authentication/register",
+    href: "/authentication/register"
   },
   {
     navlabel: true,
-    subheader: "Extra",
+    subheader: "Extra"
   },
   {
     id: uniqueId(),
     title: "Icons",
     icon: IconMoodHappy,
-    href: "/icons",
+    href: "/icons"
   },
   {
     id: uniqueId(),
     title: "Sample Page",
     icon: IconAperture,
-    href: "/sample-page",
-  },
+    href: "/sample-page"
+  }
 ];
 
 export default Menuitems;
