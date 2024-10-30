@@ -1,5 +1,4 @@
 import { ROLE_MANAGER } from "@/app/constants/RoleManager";
-import { validateToken } from "@/lib/auth";
 import getObjectId from "@/lib/getObjectId";
 import clientPromise from "@/lib/mongodb";
 import { encrypt } from "@/utils/Security";
@@ -13,7 +12,9 @@ export async function GET() {
     const accountsCollection = db.collection("users");
 
     // Lấy dữ liệu từ bảng users
-    const users = await accountsCollection.find({}).toArray();
+    // const users = await accountsCollection.find({}).toArray();
+    // Lấy dữ liệu tạo mới nhất lên trước
+    const users = await accountsCollection.find({}).sort({ created_at: -1 }).toArray();
 
     return NextResponse.json({ success: true, data: users });
   } catch (error) {
@@ -62,7 +63,7 @@ export async function POST(req) {
     // Chèn user mới vào collection
     await accountsCollection.insertOne(newUser);
 
-    return NextResponse.json({ success: true, message: "Tạo tài khoản thành công" });
+    return NextResponse.json({ success: true, message: "Tạo tài khoản thành công", data: newUser });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -109,7 +110,11 @@ export async function PUT(req) {
       }
     );
 
-    return NextResponse.json({ success: true, message: "Cập nhật thông tin thành công" });
+    return NextResponse.json({
+      success: true,
+      message: "Cập nhật thông tin thành công",
+      data: { id, profile, role, active }
+    });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

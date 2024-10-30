@@ -1,4 +1,5 @@
-import { IconBellRinging } from "@tabler/icons-react";
+import { IconBellRinging, IconUserCog } from "@tabler/icons-react";
+import { IconUsers } from "@tabler/icons-react";
 import {
   IconAperture,
   IconCopy,
@@ -31,19 +32,19 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: "Utilities"
+    subheader: "Quản lý tài khoản"
   },
   {
     id: uniqueId(),
-    title: "Typography",
-    icon: IconTypography,
-    href: "/utilities/typography"
+    title: "Người dùng",
+    icon: IconUserCog,
+    href: "/account/users"
   },
   {
     id: uniqueId(),
-    title: "Shadow",
-    icon: IconCopy,
-    href: "/utilities/shadow"
+    title: "Khách hàng",
+    icon: IconUsers,
+    href: "/account/customers"
   },
   {
     navlabel: true,

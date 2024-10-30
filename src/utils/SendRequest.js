@@ -17,7 +17,8 @@ const SendRequest = async (method, url, data = {}) => {
       payload: response.data.data
     };
   } catch (error) {
-    const message = error?.response?.data?.error || error.message || "Something went wrong";
+    console.error(error);
+    const message = error?.response?.data?.message || error.message || "Something went wrong";
     toast.error(message);
     return message;
   }

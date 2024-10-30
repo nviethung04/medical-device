@@ -24,7 +24,7 @@ export function AppProvider({ children }) {
         window.location.href = "/login";
       } else {
         try {
-          const res = await SendRequest("GET", "api/users/me");
+          const res = await SendRequest("GET", "/api/users/me");
           if (res.payload) {
             userPayload = res.payload;
             setLoading(false);

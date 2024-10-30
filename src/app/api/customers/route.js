@@ -10,7 +10,7 @@ export async function GET() {
     const accountsCollection = db.collection("customers");
 
     // Lấy dữ liệu từ bảng users
-    const customers = await accountsCollection.find({}).toArray();
+    const customers = await accountsCollection.find({}).sort({ created_at: -1 }).toArray();
 
     return NextResponse.json({ success: true, data: customers });
   } catch (error) {
