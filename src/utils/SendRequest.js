@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const SendRequest = async (method, url, data = {}) => {
   try {
@@ -13,10 +14,12 @@ const SendRequest = async (method, url, data = {}) => {
       }
     });
     return {
-      payload: response.data
+      payload: response.data.data
     };
   } catch (error) {
-    return error?.response?.data?.error || error.message || "Something went wrong";
+    const message = error?.response?.data?.error || error.message || "Something went wrong";
+    toast.error(message);
+    return message;
   }
 };
 

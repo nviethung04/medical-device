@@ -21,7 +21,7 @@ export async function GET(req) {
     }
 
     // Trả về dữ liệu user
-    return NextResponse.json({ success: true, user });
+    return NextResponse.json({ success: true, data: user });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

@@ -1,26 +1,54 @@
 import React, { useState } from "react";
-import { Box, Typography, FormGroup, FormControlLabel, Button, Stack, Checkbox } from "@mui/material";
+import { Box, Typography, FormGroup, FormControlLabel, Button, Stack, Checkbox, CircularProgress } from "@mui/material";
 import Link from "next/link";
-
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import SendRequest from "@/utils/SendRequest";
+import toast from "react-hot-toast";
 
 const AuthLogin = ({ title, subtitle, subtext }) => {
   const [account, setAccount] = useState({
     email: "",
     password: ""
   });
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    if (!account.email) {
+      toast.error("Vui lòng nhập email.");
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(account.email)) {
+      toast.error("Vui lòng nhập email hợp lệ.");
+      return false;
+    }
+    if (!account.password) {
+      toast.error("Vui lòng nhập mật khẩu.");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // validate email and password
-    // call api to login
-    const res = await SendRequest("POST", "/api/users/login", account);
 
-    if (res.payload) {
-      console.log(res.payload);
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      const res = await SendRequest("POST", "/api/users/login", account);
+      if (res.payload) {
+        toast.success("Đăng nhập thành công");
+        localStorage.setItem("token", res.payload.token);
+        window.location.href = "/";
+      } else {
+        toast.error("Đăng nhập thất bại, vui lòng kiểm tra thông tin của bạn.");
+      }
+    } catch (error) {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại.");
+    } finally {
+      setLoading(false);
     }
-    console.log(res);
   };
 
   return (
@@ -63,7 +91,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
           </FormGroup>
           <Typography
             component={Link}
-            href="/"
+            href="/forgot-password"
             fontWeight="500"
             sx={{
               textDecoration: "none",
@@ -75,8 +103,16 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
         </Stack>
       </Stack>
       <Box>
-        <Button color="primary" variant="contained" size="large" fullWidth onClick={handleSubmit}>
-          Đăng nhập
+        <Button
+          color="primary"
+          variant="contained"
+          size="large"
+          fullWidth
+          onClick={handleSubmit}
+          disabled={loading}
+          startIcon={loading && <CircularProgress size={20} color="inherit" />}
+        >
+          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
         </Button>
       </Box>
       {subtitle}

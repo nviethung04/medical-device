@@ -26,7 +26,7 @@ export function AppProvider({ children }) {
         try {
           const res = await SendRequest("GET", "api/users/me");
           if (res.payload) {
-            userPayload = res.data;
+            userPayload = res.payload;
             setLoading(false);
           } else {
             // save current url
