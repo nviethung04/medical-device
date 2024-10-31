@@ -42,7 +42,7 @@ export async function POST(req) {
     // Thêm customer vào database
     await accountsCollection.insertOne(customer);
 
-    return NextResponse.json({ success: true, message: "Tạo người dùng thành công" });
+    return NextResponse.json({ success: true, message: "Tạo người dùng thành công", data: "ok" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -75,7 +75,7 @@ export async function PUT(req) {
       }
     );
 
-    return NextResponse.json({ success: true, message: "Cập nhật người dùng thành công" });
+    return NextResponse.json({ success: true, message: "Cập nhật người dùng thành công", data: "ok" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
