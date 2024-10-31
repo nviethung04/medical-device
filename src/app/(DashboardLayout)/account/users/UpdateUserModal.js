@@ -1,5 +1,4 @@
 import { ROLE_MANAGER, ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
-import SendRequest from "@/utils/SendRequest";
 import {
   Box,
   Button,
@@ -10,115 +9,71 @@ import {
   Select,
   InputLabel,
   FormControl,
-  CircularProgress
+  Divider
 } from "@mui/material";
-import { useState } from "react";
 
 const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 450,
   bgcolor: "background.paper",
   boxShadow: 24,
-  borderRadius: 2,
-  p: 4
+  borderRadius: 3,
+  p: 4,
+  display: "flex",
+  flexDirection: "column",
+  gap: 2
 };
 
 const UpdateUserModal = (props) => {
-  const { open, onClose } = props;
-  const [newUserData, setNewUserData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    role: ROLE_MANAGER.SALE
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-
-  const validateForm = () => {
-    let formErrors = {};
-    if (!newUserData.email) formErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(newUserData.email)) formErrors.email = "Email is not valid";
-    if (!newUserData.firstName) formErrors.firstName = "First name is required";
-    if (!newUserData.lastName) formErrors.lastName = "Last name is required";
-    if (!newUserData.password) formErrors.password = "Password is required";
-    if (!newUserData.role) formErrors.role = "Role is required";
-    setErrors(formErrors);
-    return Object.keys(formErrors).length === 0;
-  };
-
-  const handleCreateUser = async () => {
-    if (!validateForm()) return;
-
-    setLoading(true);
-    const res = await SendRequest("POST", "/api/users", newUserData);
-
-    if (res.payload) {
-      onClose();
-      setNewUserData({
-        email: "",
-        firstName: "",
-        lastName: "",
-        password: "",
-        role: ROLE_MANAGER.SALE
-      });
-    }
-    setLoading(false);
-  };
+  const { openEditModal, setOpenEditModal, selectedUser, setSelectedUser, handleEditUser } = props;
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={openEditModal} onClose={() => setOpenEditModal(false)}>
       <Box sx={modalStyle}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Tạo người dùng mới
+        <Typography variant="h5" fontWeight="bold" align="center" sx={{ mb: 2 }}>
+          Chỉnh sửa người dùng
         </Typography>
+        <Divider sx={{ mb: 2 }} />
         <TextField
           label="Email"
           fullWidth
-          margin="normal"
-          value={newUserData.email}
-          onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
-          error={Boolean(errors.email)}
-          helperText={errors.email}
+          margin="dense"
+          defaultValue={selectedUser?.email}
+          variant="outlined"
+          disabled
+          sx={{ mb: 1 }}
         />
         <TextField
           label="Họ"
           fullWidth
-          margin="normal"
-          value={newUserData.firstName}
-          onChange={(e) => setNewUserData({ ...newUserData, firstName: e.target.value })}
-          error={Boolean(errors.firstName)}
-          helperText={errors.firstName}
+          margin="dense"
+          variant="outlined"
+          value={selectedUser?.profile.firstName}
+          onChange={(e) =>
+            setSelectedUser({ ...selectedUser, profile: { ...selectedUser.profile, firstName: e.target.value } })
+          }
+          sx={{ mb: 1 }}
         />
         <TextField
           label="Tên"
           fullWidth
-          margin="normal"
-          value={newUserData.lastName}
-          onChange={(e) => setNewUserData({ ...newUserData, lastName: e.target.value })}
-          error={Boolean(errors.lastName)}
-          helperText={errors.lastName}
+          margin="dense"
+          variant="outlined"
+          value={selectedUser?.profile.lastName}
+          onChange={(e) =>
+            setSelectedUser({ ...selectedUser, profile: { ...selectedUser.profile, lastName: e.target.value } })
+          }
+          sx={{ mb: 1 }}
         />
-        <TextField
-          label="Mật khẩu"
-          type="password"
-          fullWidth
-          margin="normal"
-          value={newUserData.password}
-          onChange={(e) => setNewUserData({ ...newUserData, password: e.target.value })}
-          error={Boolean(errors.password)}
-          helperText={errors.password}
-        />
-        <FormControl fullWidth margin="normal" error={Boolean(errors.role)}>
+        <FormControl fullWidth margin="dense" variant="outlined" sx={{ mb: 1 }}>
           <InputLabel>Vai Trò</InputLabel>
           <Select
             label="Vai Trò"
-            value={newUserData.role}
-            onChange={(e) => setNewUserData({ ...newUserData, role: e.target.value })}
+            value={selectedUser?.role}
+            onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
           >
             {Object.keys(ROLE_MANAGER).map((key) => (
               <MenuItem key={key} value={ROLE_MANAGER[key]}>
@@ -127,16 +82,25 @@ const UpdateUserModal = (props) => {
             ))}
           </Select>
         </FormControl>
+        <FormControl fullWidth margin="dense" variant="outlined" sx={{ mb: 1 }}>
+          <InputLabel>Kích hoạt</InputLabel>
+          <Select
+            label="Kích hoạt"
+            value={selectedUser?.active}
+            onChange={(e) => setSelectedUser({ ...selectedUser, active: e.target.value })}
+          >
+            <MenuItem value={true}>Kích hoạt</MenuItem>
+            <MenuItem value={false}>Không kích hoạt</MenuItem>
+          </Select>
+        </FormControl>
         <Button
           variant="contained"
           color="primary"
-          onClick={handleCreateUser}
+          onClick={() => handleEditUser({ ...selectedUser })}
           fullWidth
-          sx={{ mt: 2 }}
-          disabled={loading}
-          startIcon={loading && <CircularProgress size={20} />}
+          sx={{ mt: 2, py: 1.5, fontWeight: "bold" }}
         >
-          {loading ? "Đang tạo..." : "Tạo"}
+          Cập nhật
         </Button>
       </Box>
     </Modal>

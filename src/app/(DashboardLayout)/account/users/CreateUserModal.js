@@ -10,7 +10,8 @@ import {
   Select,
   InputLabel,
   FormControl,
-  CircularProgress
+  CircularProgress,
+  Divider
 } from "@mui/material";
 import { useState } from "react";
 
@@ -19,11 +20,14 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 450,
   bgcolor: "background.paper",
   boxShadow: 24,
-  borderRadius: 2,
-  p: 4
+  borderRadius: 3,
+  p: 4,
+  display: "flex",
+  flexDirection: "column",
+  gap: 2
 };
 
 const CreateUserModal = (props) => {
@@ -73,13 +77,15 @@ const CreateUserModal = (props) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={modalStyle}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
+        <Typography variant="h5" fontWeight="bold" align="center">
           Tạo người dùng mới
         </Typography>
+        <Divider sx={{ my: 2 }} />
         <TextField
           label="Email"
           fullWidth
-          margin="normal"
+          variant="outlined"
+          margin="dense"
           value={newUserData.email}
           onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
           error={Boolean(errors.email)}
@@ -88,7 +94,8 @@ const CreateUserModal = (props) => {
         <TextField
           label="Họ"
           fullWidth
-          margin="normal"
+          variant="outlined"
+          margin="dense"
           value={newUserData.firstName}
           onChange={(e) => setNewUserData({ ...newUserData, firstName: e.target.value })}
           error={Boolean(errors.firstName)}
@@ -97,7 +104,8 @@ const CreateUserModal = (props) => {
         <TextField
           label="Tên"
           fullWidth
-          margin="normal"
+          variant="outlined"
+          margin="dense"
           value={newUserData.lastName}
           onChange={(e) => setNewUserData({ ...newUserData, lastName: e.target.value })}
           error={Boolean(errors.lastName)}
@@ -107,13 +115,14 @@ const CreateUserModal = (props) => {
           label="Mật khẩu"
           type="password"
           fullWidth
-          margin="normal"
+          variant="outlined"
+          margin="dense"
           value={newUserData.password}
           onChange={(e) => setNewUserData({ ...newUserData, password: e.target.value })}
           error={Boolean(errors.password)}
           helperText={errors.password}
         />
-        <FormControl fullWidth margin="normal" error={Boolean(errors.role)}>
+        <FormControl fullWidth margin="dense" variant="outlined" error={Boolean(errors.role)}>
           <InputLabel>Vai Trò</InputLabel>
           <Select
             label="Vai Trò"
@@ -132,11 +141,11 @@ const CreateUserModal = (props) => {
           color="primary"
           onClick={handleCreateUser}
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, py: 1.5 }}
           disabled={loading}
           startIcon={loading && <CircularProgress size={20} />}
         >
-          {loading ? "Đang tạo..." : "Tạo"}
+          {loading ? "Đang tạo..." : "Tạo người dùng"}
         </Button>
       </Box>
     </Modal>

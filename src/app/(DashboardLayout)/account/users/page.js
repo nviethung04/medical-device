@@ -26,6 +26,7 @@ import { IconEdit } from "@tabler/icons-react";
 import { ROLE_MANAGER, ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
 import { IconReload } from "@tabler/icons-react";
 import CreateUserModal from "./CreateUserModal";
+import UpdateUserModal from "./UpdateUserModal";
 
 const modalStyle = {
   position: "absolute",
@@ -204,62 +205,13 @@ const SamplePage = () => {
       <CreateUserModal open={openCreateModal} onClose={handleCreateModalClose} />
 
       {/* Edit User Modal */}
-      <Modal open={openEditModal} onClose={() => setOpenEditModal(false)}>
-        <Box sx={modalStyle}>
-          <Typography variant="h6">Chỉnh sửa người dùng</Typography>
-          <TextField label="Email" fullWidth margin="normal" defaultValue={selectedUser?.email} disabled={true} />
-          <TextField
-            label="Họ"
-            fullWidth
-            margin="normal"
-            value={selectedUser?.profile.firstName}
-            onChange={(e) =>
-              setSelectedUser({ ...selectedUser, profile: { ...selectedUser.profile, firstName: e.target.value } })
-            }
-          />
-          <TextField
-            label="Tên"
-            fullWidth
-            margin="normal"
-            value={selectedUser?.profile.lastName}
-            onChange={(e) =>
-              setSelectedUser({ ...selectedUser, profile: { ...selectedUser.profile, lastName: e.target.value } })
-            }
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Vai Trò</InputLabel>
-            <Select
-              label="Vai Trò"
-              value={selectedUser?.role}
-              onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-            >
-              {Object.keys(ROLE_MANAGER).map((key) => (
-                <MenuItem key={key} value={ROLE_MANAGER[key]}>
-                  {ROLE_MANAGER_TEXT[ROLE_MANAGER[key]]}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Kích hoạt</InputLabel>
-            <Select
-              label="Kích hoạt"
-              value={selectedUser?.active}
-              onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-            >
-              <MenuItem value={true}>Kích hoạt</MenuItem>
-              <MenuItem value={false}>Không kích hoạt</MenuItem>
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleEditUser({ ...selectedUser /* update data */ })}
-          >
-            Cập nhật
-          </Button>
-        </Box>
-      </Modal>
+      <UpdateUserModal
+        openEditModal={openEditModal}
+        setOpenEditModal={setOpenEditModal}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+        handleEditUser={handleEditUser}
+      />
     </PageContainer>
   );
 };
