@@ -26,7 +26,7 @@ export async function POST(req) {
     const accountsCollection = db.collection("customers");
 
     // Lấy thông tin từ body
-    const { name, address, contact_info, contract = null } = await req.json();
+    const { name, address, contact_info, contract = null, role = 1 } = await req.json();
 
     // Tao customer moi
     const customer = {
@@ -36,7 +36,8 @@ export async function POST(req) {
       contract,
       created_at: new Date(),
       purchase_history: [],
-      active: true
+      active: true,
+      role
     };
 
     // Thêm customer vào database
@@ -56,7 +57,7 @@ export async function PUT(req) {
     const accountsCollection = db.collection("customers");
 
     // Lấy thông tin từ body
-    const { id, name, address, contact_info, contract, active = true } = await req.json();
+    const { id, name, address, contact_info, contract, active = true, role } = await req.json();
 
     const ObjectId = getObjectId(id);
 
@@ -70,6 +71,7 @@ export async function PUT(req) {
           contact_info,
           contract,
           active,
+          role,
           updated_at: new Date()
         }
       }

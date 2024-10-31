@@ -1,6 +1,19 @@
 import { useState } from "react";
-import { Box, Button, Modal, TextField, Typography, CircularProgress, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  CircularProgress,
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@mui/material";
 import SendRequest from "@/utils/SendRequest";
+import { CUSTOMER_TYPE } from "@/app/constants/RoleManager";
 
 const modalStyle = {
   position: "absolute",
@@ -114,6 +127,20 @@ const UpdateCustomerModal = ({ open, onClose, customer, refreshCustomers }) => {
           error={Boolean(errors.email)}
           helperText={errors.email}
         />
+        <FormControl fullWidth margin="dense" variant="outlined" error={Boolean(errors.role)}>
+          <InputLabel>Vai Trò</InputLabel>
+          <Select
+            label="Vai Trò"
+            value={updatedData.role}
+            onChange={(e) => setUpdatedData({ ...updatedData, role: e.target.value })}
+          >
+            {CUSTOMER_TYPE.map((role) => (
+              <MenuItem key={role.value} value={role.value}>
+                {role.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           label="Hợp đồng (nếu có)"
           fullWidth

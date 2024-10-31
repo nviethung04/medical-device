@@ -11,3 +11,8 @@ export const ROLE_MANAGER_TEXT = {
   3: "Quản lý kho",
   4: "Kỹ thuật viên"
 };
+
+export const CUSTOMER_TYPE = [
+  { value: 1, label: "Đối tác khách hàng" },
+  { value: 2, label: "Đơn vị nhập hàng" }
+];

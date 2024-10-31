@@ -20,6 +20,7 @@ import SendRequest from "@/utils/SendRequest";
 import CustomerDetailModal from "./CustomerDetailModal";
 import CustomerCreateModal from "./CustomerCreateModal";
 import UpdateCustomerModal from "./UpdateCustomerModal";
+import { CUSTOMER_TYPE } from "@/app/constants/RoleManager";
 
 const CustomerPage = () => {
   const [loading, setLoading] = useState(false);
@@ -122,6 +123,7 @@ const CustomerPage = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center">Loại khách hàng</TableCell>
                   <TableCell align="center">Tên khách hàng</TableCell>
                   <TableCell align="center">Địa chỉ</TableCell>
                   <TableCell align="center">Số điện thoại</TableCell>
@@ -133,6 +135,9 @@ const CustomerPage = () => {
               <TableBody>
                 {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
                   <TableRow key={user._id}>
+                    <TableCell align="center">
+                      {CUSTOMER_TYPE.find((role) => role.value === user.role)?.label}
+                    </TableCell>
                     <TableCell align="center">
                       <Button onClick={() => handleOpenDetailModal(user)}>{user.name}</Button>
                     </TableCell>

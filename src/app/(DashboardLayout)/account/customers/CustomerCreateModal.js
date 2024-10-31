@@ -1,6 +1,19 @@
 import { useState } from "react";
-import { Box, Button, Modal, TextField, Typography, Divider, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  Divider,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@mui/material";
 import SendRequest from "@/utils/SendRequest";
+import { CUSTOMER_TYPE } from "@/app/constants/RoleManager";
 
 const modalStyle = {
   position: "absolute",
@@ -25,7 +38,8 @@ const CustomerCreateModal = ({ open, onClose }) => {
       phone: "",
       email: ""
     },
-    contract: null
+    contract: null,
+    role: CUSTOMER_TYPE[0].value
   });
 
   const [loading, setLoading] = useState(false);
@@ -49,12 +63,13 @@ const CustomerCreateModal = ({ open, onClose }) => {
     try {
       const res = await SendRequest("POST", "/api/customers", newUserData);
       if (res.payload) {
-        onClose();
+        // onClose();
         setNewUserData({
           name: "",
           address: "",
           contact_info: { phone: "", email: "" },
-          contract: null
+          contract: null,
+          role: CUSTOMER_TYPE[0].value
         });
       }
     } catch (error) {
@@ -121,6 +136,20 @@ const CustomerCreateModal = ({ open, onClose }) => {
           error={Boolean(errors.email)}
           helperText={errors.email}
         />
+        <FormControl fullWidth margin="dense" variant="outlined" error={Boolean(errors.role)}>
+          <InputLabel>Vai Trò</InputLabel>
+          <Select
+            label="Vai Trò"
+            value={newUserData.role}
+            onChange={(e) => setNewUserData({ ...newUserData, role: e.target.value })}
+          >
+            {CUSTOMER_TYPE.map((role) => (
+              <MenuItem key={role.value} value={role.value}>
+                {role.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           label="Hợp đồng (nếu có)"
           fullWidth
