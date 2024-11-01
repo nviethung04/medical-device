@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import SendRequest from "@/utils/SendRequest";
 import { CUSTOMER_TYPE } from "@/app/constants/RoleManager";
+import toast from "react-hot-toast";
 
 const modalStyle = {
   position: "absolute",
@@ -61,6 +62,7 @@ const UpdateCustomerModal = ({ open, onClose, customer, refreshCustomers }) => {
       });
       if (res.payload) {
         onClose();
+        toast.success("Cập nhật khách hàng thành công");
         refreshCustomers();
       }
     } catch (error) {

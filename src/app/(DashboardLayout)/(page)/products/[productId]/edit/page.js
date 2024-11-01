@@ -17,6 +17,7 @@ import SendRequest from "@/utils/SendRequest";
 import { useRouter } from "next/navigation";
 import { CATEGORY_LIST, PRODUCT_STATUS } from "@/app/constants/ProductConstants";
 import LoadingFullScreen from "@/app/(DashboardLayout)/components/Loading/LoadingFullScreen";
+import toast from "react-hot-toast";
 
 const EditProduct = ({ params }) => {
   const { productId } = params;
@@ -111,6 +112,7 @@ const EditProduct = ({ params }) => {
           id: productId
         });
         if (res.payload) {
+          toast.success("Cập nhật sản phẩm thành công");
           router.push(`/products/${productId}`);
         }
       } catch (error) {

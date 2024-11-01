@@ -6,9 +6,11 @@ import { useState } from "react";
 import SendRequest from "@/utils/SendRequest";
 import { useRouter } from "next/navigation";
 import { CATEGORY_LIST, PRODUCT_STATUS } from "@/app/constants/ProductConstants";
+import LoadingFullScreen from "@/app/(DashboardLayout)/components/Loading/LoadingFullScreen";
+import toast from "react-hot-toast";
 
 const CreateProduct = () => {
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -68,6 +70,7 @@ const CreateProduct = () => {
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
+        setLoading(true);
         const res = await SendRequest("POST", "/api/products", formData);
         if (res.payload) {
           // rset form data
@@ -92,8 +95,12 @@ const CreateProduct = () => {
             status: 1
           });
         }
+
+        toast.success("Sản phẩm đã được thêm thành công");
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -101,6 +108,7 @@ const CreateProduct = () => {
   return (
     <PageContainer title="Quản lý sản phẩm" description="Quản lý sản phẩm">
       <DashboardCard title="Thêm sản phẩm mới">
+        {loading && <LoadingFullScreen />}
         <Grid container spacing={2}>
           {/* Product Information */}
           <Grid item xs={12}>

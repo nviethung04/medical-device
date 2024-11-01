@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import SendRequest from "@/utils/SendRequest";
 import { CUSTOMER_TYPE } from "@/app/constants/RoleManager";
+import toast from "react-hot-toast";
 
 const modalStyle = {
   position: "absolute",
@@ -71,6 +72,7 @@ const CustomerCreateModal = ({ open, onClose }) => {
           contract: null,
           role: CUSTOMER_TYPE[0].value
         });
+        toast.success("Tạo khách hàng thành công");
       }
     } catch (error) {
       console.error("Failed to create customer", error);

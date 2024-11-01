@@ -14,6 +14,7 @@ import {
   Divider
 } from "@mui/material";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const modalStyle = {
   position: "absolute",
@@ -70,6 +71,7 @@ const CreateUserModal = (props) => {
         password: "",
         role: ROLE_MANAGER.SALE
       });
+      toast.success("Tạo người dùng thành công");
     }
     setLoading(false);
   };

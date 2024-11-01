@@ -21,6 +21,7 @@ import { ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
 import { IconReload } from "@tabler/icons-react";
 import CreateUserModal from "./CreateUserModal";
 import UpdateUserModal from "./UpdateUserModal";
+import toast from "react-hot-toast";
 
 const SamplePage = () => {
   const [loading, setLoading] = useState(false);
@@ -72,6 +73,7 @@ const SamplePage = () => {
       });
       if (res.payload) {
         setOpenEditModal(false);
+        toast.success("Cập nhật người dùng thành công");
         fetchUsers();
         // close modal
       }
