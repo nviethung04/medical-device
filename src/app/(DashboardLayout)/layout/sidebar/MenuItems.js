@@ -1,14 +1,6 @@
 import { IconBellRinging, IconUserCog } from "@tabler/icons-react";
 import { IconUsers } from "@tabler/icons-react";
-import {
-  IconAperture,
-  IconCopy,
-  IconLayoutDashboard,
-  IconLogin,
-  IconMoodHappy,
-  IconTypography,
-  IconUserPlus
-} from "@tabler/icons-react";
+import { IconAperture, IconCopy, IconLayoutDashboard } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
 
@@ -48,35 +40,25 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: "Auth"
+    subheader: "Sản phẩm"
   },
   {
     id: uniqueId(),
-    title: "Login",
-    icon: IconLogin,
-    href: "/authentication/login"
-  },
-  {
-    id: uniqueId(),
-    title: "Register",
-    icon: IconUserPlus,
-    href: "/authentication/register"
-  },
-  {
-    navlabel: true,
-    subheader: "Extra"
-  },
-  {
-    id: uniqueId(),
-    title: "Icons",
-    icon: IconMoodHappy,
-    href: "/icons"
-  },
-  {
-    id: uniqueId(),
-    title: "Sample Page",
+    title: "Danh sách sản phẩm",
     icon: IconAperture,
-    href: "/sample-page"
+    href: "/products"
+  },
+  {
+    id: uniqueId(),
+    title: "Thêm sản phẩm",
+    icon: IconCopy,
+    href: "/products/create"
+  },
+  {
+    id: uniqueId(),
+    title: "Quản lý Nhập/Xuất",
+    icon: IconCopy,
+    href: "/products/inventory"
   }
 ];
 

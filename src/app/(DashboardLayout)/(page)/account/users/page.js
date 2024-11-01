@@ -1,6 +1,5 @@
 "use client";
 import {
-  Typography,
   Table,
   TableHead,
   TableBody,
@@ -10,34 +9,18 @@ import {
   TextField,
   CircularProgress,
   Button,
-  Modal,
   Box,
-  Chip,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select
+  Chip
 } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
 import { useEffect, useState } from "react";
 import SendRequest from "@/utils/SendRequest";
 import { IconEdit } from "@tabler/icons-react";
-import { ROLE_MANAGER, ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
+import { ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
 import { IconReload } from "@tabler/icons-react";
 import CreateUserModal from "./CreateUserModal";
 import UpdateUserModal from "./UpdateUserModal";
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4
-};
 
 const SamplePage = () => {
   const [loading, setLoading] = useState(false);

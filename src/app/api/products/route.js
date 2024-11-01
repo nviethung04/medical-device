@@ -60,7 +60,8 @@ export async function POST(req) {
       user_manual,
       notes: "",
       status,
-      created_at: new Date()
+      created_at: new Date(),
+      updated_at: new Date()
     };
 
     // Chèn product mới vào collection
