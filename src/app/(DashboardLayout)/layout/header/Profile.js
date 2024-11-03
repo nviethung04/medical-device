@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Avatar,
-  Box,
-  Menu,
-  Button,
-  IconButton,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Avatar, Box, Menu, Button, IconButton, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
 
-import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { IconKey, IconListCheck, IconMail, IconUser, IconUserEdit } from "@tabler/icons-react";
+import { useApp } from "@/app/contexts/AppContext";
+import { ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
 
 const Profile = () => {
+  const { currentUser } = useApp();
+
   const [anchorEl2, setAnchorEl2] = useState(null);
   const handleClick2 = (event) => {
     setAnchorEl2(event.currentTarget);
@@ -23,7 +18,22 @@ const Profile = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ display: "flex" }}>
+      {/* hi account */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "text.primary",
+          fontWeight: "medium",
+          fontSize: "14px",
+          mr: 1
+        }}
+      >
+        Hi, {currentUser?.profile?.firstName || ""}
+      </Box>
+
       <IconButton
         size="large"
         aria-label="show 11 new notifications"
@@ -32,8 +42,8 @@ const Profile = () => {
         aria-haspopup="true"
         sx={{
           ...(typeof anchorEl2 === "object" && {
-            color: "primary.main",
-          }),
+            color: "primary.main"
+          })
         }}
         onClick={handleClick2}
       >
@@ -42,7 +52,7 @@ const Profile = () => {
           alt="image"
           sx={{
             width: 35,
-            height: 35,
+            height: 35
           }}
         />
       </IconButton>
@@ -59,36 +69,32 @@ const Profile = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         sx={{
           "& .MuiMenu-paper": {
-            width: "200px",
-          },
+            width: "200px"
+          }
         }}
       >
         <MenuItem>
           <ListItemIcon>
+            <IconKey width={20} />
+          </ListItemIcon>
+          <ListItemText>{ROLE_MANAGER_TEXT[currentUser?.role] || 1} </ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
             <IconUser width={20} />
           </ListItemIcon>
-          <ListItemText>My Profile</ListItemText>
+          <ListItemText>
+            {currentUser?.profile?.firstName || ""} {currentUser?.profile?.lastName || ""}
+          </ListItemText>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <IconMail width={20} />
+            <IconUserEdit width={20} />
           </ListItemIcon>
-          <ListItemText>My Account</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconListCheck width={20} />
-          </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
+          <ListItemText>Tài khoản của tôi</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
-          <Button
-            href="/authentication/login"
-            variant="outlined"
-            color="primary"
-            component={Link}
-            fullWidth
-          >
+          <Button variant="outlined" color="primary" fullWidth>
             Logout
           </Button>
         </Box>
