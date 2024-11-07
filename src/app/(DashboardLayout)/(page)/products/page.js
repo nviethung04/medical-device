@@ -20,6 +20,7 @@ import { IconEye } from "@tabler/icons-react";
 import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { CATEGORY_LIST } from "@/app/constants/ProductConstants";
+import { formatCurrency } from "@/utils/Main";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -117,6 +118,7 @@ const ProductPage = () => {
                   <TableCell align="center">Mã sản phẩm</TableCell>
                   <TableCell align="center">Tên sản phẩm</TableCell>
                   <TableCell align="center">Danh mục</TableCell>
+                  <TableCell align="center">Giá</TableCell>
                   <TableCell align="center">Tổng kho</TableCell>
                   <TableCell align="center">Hạn sử dụng</TableCell>
                   <TableCell align="center">Ngày cập nhật</TableCell>
@@ -132,6 +134,7 @@ const ProductPage = () => {
                     <TableCell align="center">
                       {CATEGORY_LIST.find((category) => category.value === product.category)?.name}
                     </TableCell>
+                    <TableCell align="center">{formatCurrency(product.price)} VNĐ</TableCell>
                     <TableCell align="center">{product.stock.available}</TableCell>
                     <TableCell align="center">{product.stock.expiry} Ngày</TableCell>
                     <TableCell align="center">{new Date(product.updated_at).toLocaleDateString()}</TableCell>

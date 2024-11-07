@@ -35,7 +35,7 @@ export async function POST(req) {
       );
     }
 
-    const { name, category, stock, hardware, software, user_manual, status } = await req.json();
+    const { name, category, stock, hardware, software, user_manual, status, price } = await req.json();
 
     const isCategory = CATEGORY_LIST.find((item) => item.value === category);
 
@@ -47,6 +47,7 @@ export async function POST(req) {
       name,
       _user_added: objectId,
       _user_updated: objectId,
+      price,
       category,
       stock: {
         ...stock,
@@ -80,7 +81,7 @@ export async function PUT(req) {
     const db = client.db("products");
     const productsCollection = db.collection("products");
 
-    const { id, name, category, stock, hardware, software, user_manual, status, notes } = await req.json();
+    const { id, name, category, stock, hardware, software, user_manual, status, notes, price } = await req.json();
     const isCategory = CATEGORY_LIST.find((item) => item.value === category);
 
     if (!isCategory) {
@@ -112,6 +113,7 @@ export async function PUT(req) {
         $set: {
           name,
           category,
+          price,
           _user_updated: userUpdateId,
           stock: {
             ...product.stock,

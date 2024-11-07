@@ -14,6 +14,7 @@ const CreateProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
+    price: "",
     stock: {
       expiry: "",
       certificates: []
@@ -54,6 +55,7 @@ const CreateProduct = () => {
 
     if (!formData.name) formErrors.name = "Tên sản phẩm không được để trống";
     if (!formData.category) formErrors.category = "Danh mục không được để trống";
+    if (!formData.price) formErrors.price = "Giá không được để trống";
     if (!formData.stock.expiry) formErrors.expiry = "Hạn sử dụng không được để trống";
     if (!formData.stock.certificates.length) formErrors.certificates = "Chứng chỉ không được để trống";
     if (!formData.hardware.details) formErrors.details = "Thông tin phần cứng không được để trống";
@@ -146,6 +148,19 @@ const CreateProduct = () => {
                 </MenuItem>
               ))}
             </TextField>
+          </Grid>
+
+          {/* giá */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Giá (VNĐ)"
+              fullWidth
+              variant="outlined"
+              value={formData.price}
+              onChange={(e) => handleInputChange({ target: { name: "price", value: e.target.value } })}
+              error={!!errors.price}
+              helperText={errors.price}
+            />
           </Grid>
 
           {/* Stock Information */}
