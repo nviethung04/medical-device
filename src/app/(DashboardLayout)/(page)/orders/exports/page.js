@@ -150,6 +150,12 @@ const POSPage = () => {
 
   return (
     <PageContainer title="POS" description="Point of Sale Interface">
+      <Grid container spacing={2} mb={2}>
+        {/* name page */}
+        <Grid item xs={12}>
+          <Typography variant="h4">Xuất hàng</Typography>
+        </Grid>
+      </Grid>
       <Grid container spacing={2}>
         {/* Left Side: Product Selection */}
         <Grid item xs={12} md={9}>
