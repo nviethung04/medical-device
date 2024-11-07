@@ -142,6 +142,8 @@ const StockInPage = () => {
     setOpenDoneModal(false);
   };
 
+  const ViewProduct = () => {};
+
   return (
     <PageContainer title="Nhập Hàng" description="Giao diện nhập hàng vào kho">
       <Grid container spacing={2}>
@@ -337,8 +339,11 @@ const StockInPage = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={resetStockIn} color="primary">
+          <Button onClick={resetStockIn} color="secondary">
             Đóng
+          </Button>
+          <Button onClick={ViewProduct()} color="primary">
+            Xem đơn hàng
           </Button>
         </DialogActions>
       </Dialog>

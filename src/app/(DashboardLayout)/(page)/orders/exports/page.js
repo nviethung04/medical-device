@@ -146,6 +146,8 @@ const POSPage = () => {
     setOpenDoneModal(false);
   };
 
+  const viewProduct = () => {};
+
   return (
     <PageContainer title="POS" description="Point of Sale Interface">
       <Grid container spacing={2}>
@@ -384,8 +386,12 @@ const POSPage = () => {
           <DialogContentText>Thanh toán đã được thực hiện thành công!</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => resetPayment()} color="primary">
+          <Button onClick={() => resetPayment()} color="secondary">
             Đóng
+          </Button>
+
+          <Button onClick={() => viewProduct()} color="primary">
+            Xem đơn hàng
           </Button>
         </DialogActions>
       </Dialog>
