@@ -1,7 +1,12 @@
-import { IconBellRinging, IconUserCog } from "@tabler/icons-react";
-import { IconUsers } from "@tabler/icons-react";
-import { IconAperture, IconCopy, IconLayoutDashboard } from "@tabler/icons-react";
-
+import {
+  IconBellRinging,
+  IconUserCog,
+  IconUsers,
+  IconBox,
+  IconDownload,
+  IconUpload,
+  IconDashboard
+} from "@tabler/icons-react";
 import { uniqueId } from "lodash";
 
 const Menuitems = [
@@ -9,11 +14,10 @@ const Menuitems = [
     navlabel: true,
     subheader: "Tổng quan"
   },
-
   {
     id: uniqueId(),
     title: "Bảng điều khiển",
-    icon: IconLayoutDashboard,
+    icon: IconDashboard,
     href: "/"
   },
   {
@@ -21,6 +25,44 @@ const Menuitems = [
     title: "Thông báo",
     icon: IconBellRinging,
     href: "/notifications"
+  },
+  {
+    navlabel: true,
+    subheader: "Quản lý Nhập/Xuất"
+  },
+  {
+    id: uniqueId(),
+    title: "Xuất hàng",
+    icon: IconUpload,
+    href: "/orders/exports"
+  },
+  {
+    id: uniqueId(),
+    title: "Nhập hàng",
+    icon: IconDownload,
+    href: "/orders/imports"
+  },
+  {
+    id: uniqueId(),
+    title: "Danh sách đơn hàng",
+    icon: IconBox,
+    href: "/orders"
+  },
+  {
+    navlabel: true,
+    subheader: "Quản lý kho hàng"
+  },
+  {
+    id: uniqueId(),
+    title: "Danh sách sản phẩm",
+    icon: IconBox,
+    href: "/products"
+  },
+  {
+    id: uniqueId(),
+    title: "Thêm sản phẩm",
+    icon: IconDownload,
+    href: "/products/create"
   },
   {
     navlabel: true,
@@ -37,28 +79,6 @@ const Menuitems = [
     title: "Khách hàng",
     icon: IconUsers,
     href: "/account/customers"
-  },
-  {
-    navlabel: true,
-    subheader: "Sản phẩm"
-  },
-  {
-    id: uniqueId(),
-    title: "Danh sách sản phẩm",
-    icon: IconAperture,
-    href: "/products"
-  },
-  {
-    id: uniqueId(),
-    title: "Thêm sản phẩm",
-    icon: IconCopy,
-    href: "/products/create"
-  },
-  {
-    id: uniqueId(),
-    title: "Quản lý Nhập/Xuất",
-    icon: IconCopy,
-    href: "/products/inventory"
   }
 ];
 

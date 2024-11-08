@@ -93,8 +93,8 @@ const SamplePage = () => {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `${user.profile.firstName} ${user.profile.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+      user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${user?.profile?.firstName} ${user?.profile?.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

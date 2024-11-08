@@ -7,6 +7,7 @@ import SendRequest from "@/utils/SendRequest";
 import { useRouter } from "next/navigation";
 import { CATEGORY_LIST } from "@/app/constants/ProductConstants";
 import { ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
+import { formatCurrency } from "@/utils/Main";
 
 const ViewProduct = ({ params }) => {
   const { productId } = params;
@@ -57,17 +58,24 @@ const ViewProduct = ({ params }) => {
               Thông tin cơ bản
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4}>
             <Typography variant="subtitle1">Tên sản phẩm</Typography>
             <Typography>{product.name}</Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4}>
             <Typography variant="subtitle1" sx={{ fontWeight: "600" }}>
               Danh mục
             </Typography>
             <Typography>
               {CATEGORY_LIST.find((category) => category.value === product.category)?.name || "Không xác định"}
             </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "600" }}>
+              Giá sản phẩm
+            </Typography>
+            <Typography>{formatCurrency(product.price)} VNĐ</Typography>
           </Grid>
 
           {/* Stock Information */}

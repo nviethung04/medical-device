@@ -28,6 +28,7 @@ const EditProduct = ({ params }) => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
+    price: 0,
     stock: { expiry: "", certificates: [] },
     hardware: { details: "", model: "", serial_number: "" },
     software: { version: "", update_date: "" },
@@ -46,6 +47,7 @@ const EditProduct = ({ params }) => {
           setFormData({
             name: res.payload.name,
             category: res.payload.category,
+            price: res.payload?.price || 0,
             stock: {
               expiry: res.payload.stock.expiry,
               certificates: res.payload.stock.certificates
@@ -90,6 +92,7 @@ const EditProduct = ({ params }) => {
 
     if (!formData.name) formErrors.name = "Tên sản phẩm không được để trống";
     if (!formData.category) formErrors.category = "Danh mục không được để trống";
+    if (!formData.price) formErrors.price = "Giá không được để trống";
     if (!formData.stock.expiry) formErrors.expiry = "Hạn sử dụng không được để trống";
     if (!formData.stock.certificates.length) formErrors.certificates = "Chứng chỉ không được để trống";
     if (!formData.hardware.model) formErrors.model = "Mã sản phẩm không được để trống";
@@ -172,6 +175,20 @@ const EditProduct = ({ params }) => {
                 </MenuItem>
               ))}
             </TextField>
+          </Grid>
+
+          {/* giá có thể đổi */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Giá (VND)"
+              fullWidth
+              variant="outlined"
+              value={formData.price}
+              onChange={handleInputChange}
+              name="price"
+              error={!!errors.price}
+              helperText={errors.price}
+            />
           </Grid>
 
           {/* Stock Information (Editable Fields Only) */}

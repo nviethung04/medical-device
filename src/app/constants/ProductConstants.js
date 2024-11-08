@@ -63,17 +63,12 @@ export const TRANSACTION_STATUS = {
   0: "Hủy",
   1: "Đang chờ",
   2: "Đang chuẩn bị hàng",
-  3: "Đang giao hàng",
-  4: "Đang vận chuyển",
-  5: "Đang trong quá trình bảo trì",
-  7: "Đang vận chuyển trả hàng",
-  8: "Đã giao hàng",
-  9: "Đã nhận hàng",
-  10: "Đã bảo trì"
+  3: "Đang vận chuyển",
+  4: "Đã giao hàng",
+  5: "Đã nhận hàng"
 };
 
-const TRANSACTION_TYPE = {
-  1: "Nhập hàng",
-  2: "Xuất hàng",
-  3: "Bảo trì"
+export const TRANSACTION_TYPE = {
+  import: "Đặt hàng",
+  export: "Xuất hàng"
 };
