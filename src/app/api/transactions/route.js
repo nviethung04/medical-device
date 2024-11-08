@@ -1,3 +1,4 @@
+import { validateToken } from "@/lib/auth";
 import getObjectId from "@/lib/getObjectId";
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
@@ -53,7 +54,7 @@ export async function GET() {
           note: transaction.note,
           status: transaction.status,
           created_at: transaction.created_at,
-          updated_at: transaction.updated,
+          updated_at: transaction.updated_at,
           type: transaction.type,
           supplier: supplier,
           user: user
@@ -62,6 +63,56 @@ export async function GET() {
     );
 
     return NextResponse.json({ success: true, data: transactionExport });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function PUT(req) {
+  try {
+    const client = await clientPromise;
+    const db = client.db("products");
+    const productsCollection = db.collection("products");
+    const transactionCollection = db.collection("transactions");
+
+    const objectId = await validateToken(req);
+
+    if (!objectId) {
+      return NextResponse.json(
+        { success: false, message: "Bạn cần đăng nhập để thực hiện thao tác này" },
+        { status: 401 }
+      );
+    }
+
+    const { id, note, address, status } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ success: false, message: "Thiếu thông tin" }, { status: 400 });
+    }
+
+    const transaction = await transactionCollection.findOne({ _id: getObjectId(id) });
+
+    if (!transaction) {
+      return NextResponse.json({ success: false, message: "Không tìm thấy transaction" }, { status: 404 });
+    }
+
+    if (transaction.status === 8 || transaction.status === 9 || transaction.status === 10) {
+      return NextResponse.json({ success: false, message: "Transaction đã hoàn thành" }, { status: 400 });
+    }
+
+    // update
+    const update = {
+      $set: {
+        note: note || transaction.note,
+        address: address || transaction.address,
+        status: status || transaction.status,
+        updated_at: new Date()
+      }
+    };
+
+    await transactionCollection.updateOne({ _id: getObjectId(id) }, update);
+
+    return NextResponse.json({ success: true, message: "Cập nhật thành công" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
