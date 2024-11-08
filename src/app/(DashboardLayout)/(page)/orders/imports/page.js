@@ -27,8 +27,13 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import SendRequest from "@/utils/SendRequest";
 import { CATEGORY_LIST } from "@/app/constants/ProductConstants";
 import { formatCurrency } from "@/utils/Main";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import LoadingFullScreen from "@/app/(DashboardLayout)/components/Loading/LoadingFullScreen";
 
 const StockInPage = () => {
+  const router = useRouter();
+
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [quantity, setQuantity] = useState({});
   const [price, setPrice] = useState({});
@@ -39,6 +44,9 @@ const StockInPage = () => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openDoneModal, setOpenDoneModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
+  const [created, setCreated] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const [note, setNote] = useState("");
 
@@ -132,9 +140,19 @@ const StockInPage = () => {
       note
     };
 
-    console.log("Stock-In Payload:", payload);
-
+    setLoading(true);
     setOpenConfirmModal(false); // Close the modal after confirming stock-in
+
+    let res = await SendRequest("POST", "/api/transactions/imports", payload);
+    console.log(res);
+    if (res.payload) {
+      setCreated(res.payload);
+    } else {
+      toast.error("Lên đơn hàng thất bại");
+    }
+
+    setLoading(false);
+
     setSelectedProducts([]);
     setQuantity({});
     setPrice({});
@@ -145,10 +163,13 @@ const StockInPage = () => {
     setOpenDoneModal(false);
   };
 
-  const ViewProduct = () => {};
+  const ViewProduct = () => {
+    router.push(`/orders/${created?.insertedId}`);
+  };
 
   return (
     <PageContainer title="Nhập Hàng" description="Giao diện nhập hàng vào kho">
+      {loading && <LoadingFullScreen />}
       <Grid container spacing={2} mb={2}>
         {/* name page */}
         <Grid item xs={12}>
@@ -360,7 +381,7 @@ const StockInPage = () => {
           <Button onClick={resetStockIn} color="secondary">
             Đóng
           </Button>
-          <Button onClick={ViewProduct()} color="primary">
+          <Button onClick={ViewProduct} color="primary">
             Xem đơn hàng
           </Button>
         </DialogActions>

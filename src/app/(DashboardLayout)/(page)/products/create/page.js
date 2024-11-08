@@ -4,7 +4,6 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
 import { useState } from "react";
 import SendRequest from "@/utils/SendRequest";
-import { useRouter } from "next/navigation";
 import { CATEGORY_LIST, PRODUCT_STATUS } from "@/app/constants/ProductConstants";
 import LoadingFullScreen from "@/app/(DashboardLayout)/components/Loading/LoadingFullScreen";
 import toast from "react-hot-toast";

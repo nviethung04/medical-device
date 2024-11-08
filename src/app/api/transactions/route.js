@@ -46,10 +46,15 @@ export async function GET() {
             };
           }
         }
+        let totalPrice = 0;
+        transaction.products.forEach((product) => {
+          totalPrice += product.price * product.quantity;
+        });
 
         return {
           _id: transaction._id,
           total_product: transaction.products?.length,
+          totalPrice: totalPrice,
           address: transaction.address,
           note: transaction.note,
           status: transaction.status,
@@ -112,7 +117,7 @@ export async function PUT(req) {
 
     await transactionCollection.updateOne({ _id: getObjectId(id) }, update);
 
-    return NextResponse.json({ success: true, message: "Cập nhật thành công" });
+    return NextResponse.json({ success: true, message: "Cập nhật thành công", data: "ok" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

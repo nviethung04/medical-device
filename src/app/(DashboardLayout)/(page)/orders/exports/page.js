@@ -27,8 +27,12 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import SendRequest from "@/utils/SendRequest";
 import { CATEGORY_LIST } from "@/app/constants/ProductConstants";
 import { formatCurrency } from "@/utils/Main";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import LoadingFullScreen from "@/app/(DashboardLayout)/components/Loading/LoadingFullScreen";
 
 const POSPage = () => {
+  const router = useRouter();
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [quantity, setQuantity] = useState({});
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -40,6 +44,9 @@ const POSPage = () => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
   const [openDoneModal, setOpenDoneModal] = useState(false);
+
+  const [created, setCreated] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const [inputValue, setInputValue] = useState("");
   const [note, setNote] = useState("");
@@ -62,7 +69,7 @@ const POSPage = () => {
         setCustomers(res.payload);
       }
     } catch (error) {
-      console.error(error);
+      toast.error("Lỗi khi tải dữ liệu khách hàng");
     }
   };
 
@@ -120,20 +127,29 @@ const POSPage = () => {
   const confirmPayment = async () => {
     const products = selectedProducts.map((product) => ({
       product: product._id,
-      quantity: quantity[product._id]
+      quantity: quantity[product._id],
+      price: product.price
     }));
 
     const payload = {
-      customer: selectedCustomer._id,
+      supplier: selectedCustomer._id,
       products,
       freeTax,
       address: paymentAddress,
       note: note
     };
-
-    console.log(payload);
-
+    setLoading(true);
     setOpenConfirmModal(false); // Close the modal after confirming payment
+
+    let res = await SendRequest("POST", "/api/transactions/exports", payload);
+
+    if (res.payload) {
+      setCreated(res.payload);
+    } else {
+      toast.error("Lên đơn hàng thất bại");
+    }
+
+    setLoading(false);
 
     setSelectedProducts([]);
     setQuantity({});
@@ -148,10 +164,15 @@ const POSPage = () => {
     setOpenDoneModal(false);
   };
 
-  const viewProduct = () => {};
+  const viewProduct = () => {
+    if (created.insertedId) {
+      router.push(`/orders/${created.insertedId}`);
+    }
+  };
 
   return (
     <PageContainer title="POS" description="Point of Sale Interface">
+      {loading && <LoadingFullScreen />}
       <Grid container spacing={2} mb={2}>
         {/* name page */}
         <Grid item xs={12}>
@@ -390,7 +411,7 @@ const POSPage = () => {
           <Button onClick={() => setOpenConfirmModal(false)} color="secondary">
             Hủy
           </Button>
-          <Button onClick={confirmPayment} color="primary">
+          <Button onClick={confirmPayment} color="primary" loading={loading}>
             Xác nhận
           </Button>
         </DialogActions>

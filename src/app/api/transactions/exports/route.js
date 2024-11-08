@@ -21,7 +21,7 @@ export async function POST(req) {
       );
     }
 
-    const { supplier, products, address, note } = await req.json();
+    const { supplier, products, address, note, freeTax } = await req.json();
 
     const supplierId = getObjectId(supplier);
 
@@ -45,6 +45,7 @@ export async function POST(req) {
       address,
       type: "export",
       note,
+      freeTax: freeTax,
       status: 1,
       handled_by_id: objectId,
       created_at: new Date(),
