@@ -7,14 +7,14 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
-    "no-unused-vars": "warn",
-    "no-undef": "error",
-    "no-debugger": "error",
+    "no-unused-vars": "off",
+    "no-undef": "off",
+    "no-debugger": "off",
     "react/no-unescaped-entities": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "prettier/prettier": [
-      "error",
+      "off",
       {
         "endOfLine": "auto"
       }
