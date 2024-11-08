@@ -73,10 +73,20 @@ export async function GET() {
   }
 }
 
+export async function POST(req) {
+  try {
+ 
+    return NextResponse.json({ success: true, message: "Tạo sản phẩm thành công", data: ":OK" });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
 export async function PUT(req) {
   try {
     const client = await clientPromise;
     const db = client.db("products");
+    const productsCollection = db.collection("products");
     const transactionCollection = db.collection("transactions");
 
     const objectId = await validateToken(req);
@@ -104,6 +114,7 @@ export async function PUT(req) {
       return NextResponse.json({ success: false, message: "Transaction đã hoàn thành" }, { status: 400 });
     }
 
+    // update
     const update = {
       $set: {
         note: note || transaction.note,
@@ -115,7 +126,7 @@ export async function PUT(req) {
 
     await transactionCollection.updateOne({ _id: getObjectId(id) }, update);
 
-    return NextResponse.json({ success: true, message: "Cập nhật thành công" });
+    return NextResponse.json({ success: true, message: "Cập nhật thành công", data: "ok" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
