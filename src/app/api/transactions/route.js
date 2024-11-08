@@ -76,7 +76,7 @@ export async function GET() {
 export async function POST(req) {
   try {
  
-    return NextResponse.json({ success: true, message: "Tạo sản phẩm thành công", data: ":OK" });
+    return NextResponse.json({ success: true, message: "Tạo sản phẩm thành công", data: "OK" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
