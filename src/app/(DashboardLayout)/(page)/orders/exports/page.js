@@ -42,6 +42,7 @@ const POSPage = () => {
   const [openDoneModal, setOpenDoneModal] = useState(false);
 
   const [inputValue, setInputValue] = useState("");
+  const [note, setNote] = useState("");
 
   const fetchProducts = async () => {
     try {
@@ -126,7 +127,8 @@ const POSPage = () => {
       customer: selectedCustomer._id,
       products,
       freeTax,
-      address: paymentAddress
+      address: paymentAddress,
+      note: note
     };
 
     console.log(payload);
@@ -351,7 +353,16 @@ const POSPage = () => {
                 onChange={(e) => setPaymentAddress(e.target.value)}
                 sx={{ mt: 2 }}
               />
-              <TextField label="Ghi chú" multiline rows={3} variant="outlined" fullWidth sx={{ mt: 2 }} />
+              <TextField
+                label="Ghi chú"
+                multiline
+                rows={3}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+              />
               <Button
                 variant="contained"
                 color="primary"
