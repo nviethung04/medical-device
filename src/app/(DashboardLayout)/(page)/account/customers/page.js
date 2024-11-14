@@ -21,6 +21,7 @@ import CustomerDetailModal from "./CustomerDetailModal";
 import CustomerCreateModal from "./CustomerCreateModal";
 import UpdateCustomerModal from "./UpdateCustomerModal";
 import { CUSTOMER_TYPE } from "@/app/constants/RoleManager";
+import { convertDate } from "@/utils/Main";
 
 const CustomerPage = () => {
   const [loading, setLoading] = useState(false);
@@ -144,7 +145,7 @@ const CustomerPage = () => {
                     <TableCell align="center">{user.address}</TableCell>
                     <TableCell align="center">{user.contact_info.phone}</TableCell>
                     <TableCell align="center">{user.contact_info.email}</TableCell>
-                    <TableCell align="center">{new Date(user.created_at).toLocaleDateString()}</TableCell>
+                    <TableCell align="center">{convertDate(user.created_at)}</TableCell>
                     <TableCell align="center">
                       <IconButton color="primary" onClick={() => handleOpenDetailModal(user)}>
                         <IconInfoCircle />

@@ -26,12 +26,13 @@ import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCa
 import { useEffect, useState } from "react";
 import SendRequest from "@/utils/SendRequest";
 import { useRouter } from "next/navigation";
-import { formatCurrency } from "@/utils/Main";
+import { calculateMaintenanceDate, convertDate, formatCurrency } from "@/utils/Main";
 import { TRANSACTION_STATUS, TRANSACTION_TYPE } from "@/app/constants/ProductConstants";
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineSeparator } from "@mui/lab";
 import { FormControl } from "@mui/base";
 import { MenuItem } from "react-mui-sidebar";
 import toast from "react-hot-toast";
+import { ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
 
 const ViewTransaction = ({ params }) => {
   const { orderId } = params;
@@ -147,8 +148,7 @@ const ViewTransaction = ({ params }) => {
             </Typography>
             <Typography>Họ Tên: {`${user.profile.firstName} ${user.profile.lastName}`}</Typography>
             <Typography>Email: {user.email}</Typography>
-            <Typography>Ngày tạo: {new Date(created_at).toLocaleDateString()}</Typography>
-            <Typography>Ngày cập nhật: {new Date(updated_at).toLocaleDateString()}</Typography>
+            <Typography>Chức vụ: {ROLE_MANAGER_TEXT[user.role]}</Typography>
           </Grid>
         </Grid>
 
@@ -162,7 +162,15 @@ const ViewTransaction = ({ params }) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="h6" gutterBottom>
+            {/* Ngày tạo đơn và ngày cập nhập */}
+            <Typography>
+              Ngày tạo: {convertDate(created_at)} - {convertDate(created_at)}
+            </Typography>
+
+            <Typography>
+              Ngày cập nhập: {convertDate(updated_at)} - {convertDate(updated_at)}
+            </Typography>
+            <Typography variant="h6" gutterBottom sx={{mt:2}}>
               Loại đơn hàng
             </Typography>
             <Typography>{TRANSACTION_TYPE[transaction.type]}</Typography>
@@ -215,6 +223,7 @@ const ViewTransaction = ({ params }) => {
               <TableRow>
                 <TableCell align="center">Tên sản phẩm</TableCell>
                 <TableCell align="center">Hạn sử dụng</TableCell>
+                <TableCell align="center">Thời gian bảo trì (dự kiến)</TableCell>
                 <TableCell align="center">Số lượng</TableCell>
                 <TableCell align="center">Giá (VNĐ)</TableCell>
                 <TableCell align="center">Tổng (VNĐ)</TableCell>
@@ -227,6 +236,7 @@ const ViewTransaction = ({ params }) => {
                   <TableRow key={product.product_id}>
                     <TableCell align="center">{product.name}</TableCell>
                     <TableCell align="center">{product.expiry_date} ngày</TableCell>
+                    <TableCell align="center">{calculateMaintenanceDate(created_at, product.expiry_date)}</TableCell>
                     <TableCell align="center">{product.quantity}</TableCell>
                     <TableCell align="center">{formatCurrency(product.price)}VNĐ</TableCell>
                     <TableCell align="center">{formatCurrency(productTotal)}VNĐ</TableCell>
@@ -238,7 +248,7 @@ const ViewTransaction = ({ params }) => {
                 <TableCell colSpan={1} align="center" sx={{ fontWeight: "bold" }}>
                   Tổng cộng:
                 </TableCell>
-                <TableCell colSpan={3} align="center"></TableCell>
+                <TableCell colSpan={4} align="center"></TableCell>
                 <TableCell sx={{ fontWeight: "bold" }} align="center">
                   {formatCurrency(totalAmount)}VNĐ
                 </TableCell>
