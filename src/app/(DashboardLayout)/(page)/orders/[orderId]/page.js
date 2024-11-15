@@ -50,9 +50,12 @@ const ViewTransaction = ({ params }) => {
         const res = await SendRequest("GET", `/api/transactions/${orderId}`);
         if (res.payload) {
           setTransaction(res.payload);
+        }else{
+          window.location.href = "/404";
         }
       } catch (error) {
         console.error(error);
+        window.location.href = "/404";
       }
     };
     fetchTransaction();

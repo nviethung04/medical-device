@@ -44,6 +44,7 @@ export async function GET() {
       ...upcomingMaintenances.map((item) => ({
         type: "maintenance",
         productId: item.product_id,
+        transaction_id : item.transaction_id,
         name: item.name,
         maintenanceDateNext: item.maintenanceDateNext,
         message: `Lịch bảo trì sắp đến cho sản phẩm "${item.name}" vào ngày ${convertDate(item.maintenanceDateNext)}.`,

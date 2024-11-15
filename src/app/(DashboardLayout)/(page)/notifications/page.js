@@ -14,6 +14,7 @@ import {
   Typography,
   CircularProgress,
   Pagination,
+  Link,
 } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import SendRequest from "@/utils/SendRequest";
@@ -85,6 +86,7 @@ const NotificationsPage = () => {
                         <TableCell>Loại thông báo</TableCell>
                         <TableCell>Tên sản phẩm</TableCell>
                         <TableCell>Chi tiết</TableCell>
+                        <TableCell>Xem</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -93,6 +95,19 @@ const NotificationsPage = () => {
                           <TableCell>{item.type === "maintenance" ? "Bảo trì" : "Tồn kho"}</TableCell>
                           <TableCell>{item.name}</TableCell>
                           <TableCell>{item.message}</TableCell>
+                          <TableCell>
+                            {/* Xem sản phẩm */}
+                            {item?.transaction_id ? (
+                              <Link href={`/orders/${item.transaction_id}`} underline="none">
+                                <Typography color="primary">Xem đơn hàng</Typography>
+                              </Link>
+                            ): (
+                              <Link href={`/products/${item.productId}`} underline="none">
+                                <Typography color="primary">Xem sản phẩm</Typography>
+                              </Link>
+                            )}
+                            
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

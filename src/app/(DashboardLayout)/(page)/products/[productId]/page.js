@@ -21,8 +21,13 @@ const ViewProduct = ({ params }) => {
         const res = await SendRequest("GET", `/api/products/${productId}`);
         if (res.payload) {
           setProduct(res.payload);
+        }else{
+        window.location.href = "/404";
+
         }
       } catch (error) {
+        // redirect to 404 page
+        window.location.href = "/404";
         console.error(error);
       }
     };
