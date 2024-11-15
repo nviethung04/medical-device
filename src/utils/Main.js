@@ -18,6 +18,11 @@ export function calculateMaintenanceDate(createdAt, daysToMaintain) {
     daysToMaintain = Number(daysToMaintain);
   }
 
+  // nếu createdAt không phải là một chuỗi thì chuyển nó về chuỗi
+  if (typeof createdAt !== "string") {
+    createdAt = createdAt.toString();
+  }
+
   const creationDate = new Date(createdAt);
   const maintenanceDate = new Date(creationDate);
   
@@ -32,6 +37,20 @@ export function calculateMaintenanceDate(createdAt, daysToMaintain) {
   });
 
   return formattedDate;
+}
+
+export function calculateMaintenanceDateRaw(createdAt, daysToMaintain) {
+  // convert daysToMaintain if it's not a number
+  if (typeof daysToMaintain !== "number") {
+    daysToMaintain = Number(daysToMaintain);
+  }
+
+  const creationDate = new Date(createdAt);
+  const maintenanceDate = new Date(creationDate);
+  
+  // Cộng thêm số ngày bảo trì vào ngày tạo
+  maintenanceDate.setDate(maintenanceDate.getDate() + daysToMaintain);
+  return maintenanceDate;
 }
 
 export const convertDate = (date) => {

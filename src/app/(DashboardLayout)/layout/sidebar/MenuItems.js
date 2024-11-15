@@ -5,7 +5,8 @@ import {
   IconBox,
   IconDownload,
   IconUpload,
-  IconDashboard
+  IconDashboard,
+  IconSettingsAutomation
 } from "@tabler/icons-react";
 import { uniqueId } from "lodash";
 
@@ -25,6 +26,12 @@ const Menuitems = [
     title: "Thông báo",
     icon: IconBellRinging,
     href: "/notifications"
+  },
+  {
+    id: uniqueId(),
+    title: "Lịch trình bảo trì",
+    icon: IconSettingsAutomation,
+    href: "/maintenances"
   },
   {
     navlabel: true,

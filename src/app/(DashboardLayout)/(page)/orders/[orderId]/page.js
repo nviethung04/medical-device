@@ -29,8 +29,6 @@ import { useRouter } from "next/navigation";
 import { calculateMaintenanceDate, convertDate, formatCurrency } from "@/utils/Main";
 import { TRANSACTION_STATUS, TRANSACTION_TYPE } from "@/app/constants/ProductConstants";
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineSeparator } from "@mui/lab";
-import { FormControl } from "@mui/base";
-import { MenuItem } from "react-mui-sidebar";
 import toast from "react-hot-toast";
 import { ROLE_MANAGER_TEXT } from "@/app/constants/RoleManager";
 
@@ -164,11 +162,11 @@ const ViewTransaction = ({ params }) => {
           <Grid item xs={6}>
             {/* Ngày tạo đơn và ngày cập nhập */}
             <Typography>
-              Ngày tạo: {convertDate(created_at)} - {convertDate(created_at)}
+              Ngày tạo: {convertDate(created_at)} 
             </Typography>
 
             <Typography>
-              Ngày cập nhập: {convertDate(updated_at)} - {convertDate(updated_at)}
+              Ngày cập nhập: {convertDate(updated_at)} 
             </Typography>
             <Typography variant="h6" gutterBottom sx={{mt:2}}>
               Loại đơn hàng

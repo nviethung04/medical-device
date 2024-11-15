@@ -1,6 +1,7 @@
 import { validateToken } from "@/lib/auth";
 import getObjectId from "@/lib/getObjectId";
 import clientPromise from "@/lib/mongodb";
+import { calculateMaintenanceDateRaw } from "@/utils/Main";
 import { NextResponse } from "next/server";
 
 // API POST để tạo một transactions mới
@@ -29,11 +30,13 @@ export async function POST(req) {
       .find({ _id: { $in: products.map((product) => getObjectId(product.product)) } })
       .toArray();
 
+    let productsMaintenance = []
+
     const transactionNew = {
       supplier: supplierId,
       products: productsDetail.map((product) => {
         const productSelected = products.find((item) => item.product === product._id.toString());
-        return {
+        const dataProduct = {
           product_id: product._id,
           name: product.name,
           category: product.category,
@@ -41,6 +44,8 @@ export async function POST(req) {
           price: productSelected.price,
           expiry_date: product.stock.expiry
         };
+        productsMaintenance.push(dataProduct);
+        return dataProduct;
       }),
       address,
       type: "export",
@@ -53,6 +58,9 @@ export async function POST(req) {
     };
 
     const data = await transactionCollection.insertOne(transactionNew);
+
+    // get id inserted
+    const transactionId = data.insertedId;
 
     // update quantity of products
     productsDetail.forEach(async (product) => {
@@ -70,6 +78,26 @@ export async function POST(req) {
           }
         }
       );
+    });
+
+    // create maintenance
+    productsMaintenance.forEach(async (product) => {
+      const maintenanceNew = {
+        product_id : product.product_id,
+        name : product.name,
+        category : product.category,
+        quantity : product.quantity,
+        price : product.price,
+        expiry_date : product.expiry_date,
+        type: "import",
+        transaction_id: transactionId,
+        supplier_id: supplierId,
+        userId: objectId,
+        created_at: new Date(),
+        maintenanceDateNext: calculateMaintenanceDateRaw(new Date(), product.expiry_date),
+        maintenanced: false,
+      };
+      await maintenanceCollection.insertOne(maintenanceNew);
     });
 
     return NextResponse.json({ success: true, message: "Đặt hàng thành công", data: data });
