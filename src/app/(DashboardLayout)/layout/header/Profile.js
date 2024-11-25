@@ -17,6 +17,12 @@ const Profile = () => {
     setAnchorEl2(null);
   };
 
+  const logout = () => {
+    // Logout
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       {/* hi account */}
@@ -94,8 +100,8 @@ const Profile = () => {
           <ListItemText>Tài khoản của tôi</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
-          <Button variant="outlined" color="primary" fullWidth>
-            Logout
+          <Button variant="outlined" color="primary" fullWidth onClick={logout}>
+            Đăng xuất
           </Button>
         </Box>
       </Menu>
