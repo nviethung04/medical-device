@@ -21,6 +21,8 @@ import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { CATEGORY_LIST } from "@/app/constants/ProductConstants";
 import { formatCurrency } from "@/utils/Main";
+import Checkbox from "@mui/material/Checkbox";
+
 
 const ProductPage = () => {
   const router = useRouter();
@@ -72,20 +74,49 @@ const ProductPage = () => {
     router.push("/products/create");
   };
 
+
   const navigateToView = (productId) => {
     router.push(`/products/${productId}`);
   };
 
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleSelectProduct = (id) => {
+    setSelectedProducts((prevSelected) =>
+      prevSelected.includes(id)
+       ? prevSelected.filter((productId) => productId !== id)
+       : [...prevSelected, id]
+   );
+  };
+
+  const handleDeleteSelected = async () => {
+      await deleteProductsAPI(selectedProducts); // Gọi API để xóa sản phẩm
+      setSelectedProducts([]);
+      fetchProducts()   
+  };
+
+  const deleteProductsAPI = async (productIds) => {   
+      await SendRequest("DELETE", "/api/products", {
+        productIds, // Gửi danh sách ID cần xóa
+      });
+  };
+  
+
   return (
     <PageContainer title="Quản lý sản phẩm" description="Quản lý sản phẩm">
       <DashboardCard
-        title="Quản lý sản phẩm"
-        action={
-          <Button variant="contained" color="primary" onClick={navigateToCreate}>
-            Thêm sản phẩm
-          </Button>
-        }
-      >
+  title="Quản lý sản phẩm"
+  action={
+    <div style={{ display: "flex", gap: "10px" }}>
+      <Button variant="contained" color="primary" onClick={navigateToCreate}>
+        Thêm sản phẩm
+      </Button>
+      <Button variant="contained" color="primary" onClick={handleDeleteSelected}>
+        Xóa sản phẩm
+      </Button>
+    </div>
+  }
+>
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
           <TextField
             label="Tìm kiếm sản phẩm"
@@ -115,6 +146,7 @@ const ProductPage = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center"> </TableCell>
                   <TableCell align="center">Mã sản phẩm</TableCell>
                   <TableCell align="center">Tên sản phẩm</TableCell>
                   <TableCell align="center">Danh mục</TableCell>
@@ -129,6 +161,12 @@ const ProductPage = () => {
               <TableBody>
                 {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product) => (
                   <TableRow key={product._id}>
+                    <TableCell align="center">
+                    <Checkbox
+                        checked={selectedProducts.includes(product._id)}
+                        onChange={() => handleSelectProduct(product._id)}
+                       />
+                    </TableCell>
                     <TableCell align="center">{product.hardware.serial_number}</TableCell>
                     <TableCell align="center">{product.name}</TableCell>
                     <TableCell align="center">

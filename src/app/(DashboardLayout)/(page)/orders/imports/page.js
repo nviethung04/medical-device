@@ -217,6 +217,7 @@ const StockInPage = () => {
                     <TableCell>Tên</TableCell>
                     <TableCell>Thể loại</TableCell>
                     <TableCell>Giá nhập</TableCell>
+                    <TableCell>Hạn sử dụng</TableCell>
                     <TableCell>Số lượng</TableCell>
                     <TableCell>Tổng tiền</TableCell>
                     <TableCell>Hành động</TableCell>
@@ -247,6 +248,7 @@ const StockInPage = () => {
                           fullWidth
                         />
                       </TableCell>
+                      <TableCell align="center">{product.stock.expiry} Ngày</TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <IconButton onClick={() => handleQuantityChange(product._id, -1)}>

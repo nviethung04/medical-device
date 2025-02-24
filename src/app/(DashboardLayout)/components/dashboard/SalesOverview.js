@@ -18,14 +18,11 @@ const SalesOverview = () => {
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
 
-// Hàm gọi API để lấy dữ liệu giao dịch
-    useEffect(() => {
-        // get current month
-        const currentMonth = new Date().getMonth() + 1;
-        setMonth(currentMonth);
-    }, []);
+  useEffect(() => {
+    const currentMonth = new Date().getMonth() + 1;
+    setMonth(currentMonth);
+  }, []);
 
-  // Hàm gọi API để lấy dữ liệu giao dịch
   const fetchTransactions = async () => {
     setLoading(true);
     try {
@@ -40,7 +37,6 @@ const SalesOverview = () => {
     }
   };
 
-  // Xử lý dữ liệu giao dịch cho biểu đồ
   const processData = () => {
     const filteredData = data.filter((item) => {
       const transactionMonth = new Date(item.created_at).getMonth() + 1;
@@ -76,7 +72,6 @@ const SalesOverview = () => {
     }
   }, [data, month]);
 
-  // Cấu hình biểu đồ
   const optionscolumnchart = {
     chart: {
       type: "bar",
@@ -103,7 +98,8 @@ const SalesOverview = () => {
       enabled: false,
     },
     legend: {
-      show: false,
+      show: true,
+      position: "top",
     },
     grid: {
       borderColor: "rgba(0,0,0,0.1)",
@@ -117,8 +113,7 @@ const SalesOverview = () => {
       axisBorder: { show: false },
     },
     tooltip: {
-      theme: "dark",
-      fillSeriesColor: false,
+      enabled: false,
     },
   };
 
@@ -133,18 +128,11 @@ const SalesOverview = () => {
           size="small"
           onChange={(e) => setMonth(e.target.value)}
         >
-          <MenuItem value={1}>Tháng 1</MenuItem>
-          <MenuItem value={2}>Tháng 2</MenuItem>
-          <MenuItem value={3}>Tháng 3</MenuItem>
-          <MenuItem value={4}>Tháng 4</MenuItem>
-          <MenuItem value={5}>Tháng 5</MenuItem>
-          <MenuItem value={6}>Tháng 6</MenuItem>
-          <MenuItem value={7}>Tháng 7</MenuItem>
-          <MenuItem value={8}>Tháng 8</MenuItem>
-          <MenuItem value={9}>Tháng 9</MenuItem>
-          <MenuItem value={10}>Tháng 10</MenuItem>
-          <MenuItem value={11}>Tháng 11</MenuItem>
-          <MenuItem value={12}>Tháng 12</MenuItem>
+          {[...Array(12)].map((_, i) => (
+            <MenuItem key={i + 1} value={i + 1}>
+              Tháng {i + 1}
+            </MenuItem>
+          ))}
         </Select>
       }
     >

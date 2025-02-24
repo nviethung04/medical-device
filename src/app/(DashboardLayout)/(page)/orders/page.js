@@ -146,6 +146,7 @@ const OrderPage = () => {
             onChange={handleSearchChange}
             style={{ margin: 0 }}
           />
+        
 
           {/* Nút reload */}
           <Box sx={{ marginLeft: 2, display: "flex", alignItems: "center" }}>

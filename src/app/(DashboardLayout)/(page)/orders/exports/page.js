@@ -30,6 +30,8 @@ import { formatCurrency } from "@/utils/Main";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import LoadingFullScreen from "@/app/(DashboardLayout)/components/Loading/LoadingFullScreen";
+import CreateUserModal from "../../account/users/CreateUserModal";
+import CustomerCreateModal from "../../account/customers/CustomerCreateModal";
 
 const POSPage = () => {
   const router = useRouter();
@@ -50,6 +52,8 @@ const POSPage = () => {
 
   const [inputValue, setInputValue] = useState("");
   const [note, setNote] = useState("");
+
+  const [openCreateUser, setOpenCreateUser] = useState(false)
 
   const fetchProducts = async () => {
     try {
@@ -72,6 +76,11 @@ const POSPage = () => {
       toast.error("Lỗi khi tải dữ liệu khách hàng");
     }
   };
+
+  const onCloseModalCreateUser = () => {
+    setOpenCreateUser(false);
+    fetchCustomers()
+  }
 
   useEffect(() => {
     fetchProducts();
@@ -302,6 +311,9 @@ const POSPage = () => {
                 </Box>
               )}
             />
+          <Button variant="contained" color="primary" onClick={()=>setOpenCreateUser(true)}>
+            Thêm khách hàng
+          </Button>
             {selectedCustomer && (
               <Box mt={2}>
                 <Typography variant="h6">Thông tin khách hàng</Typography>
@@ -433,6 +445,11 @@ const POSPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <CustomerCreateModal 
+      open = {openCreateUser}
+      onClose = {()=>onCloseModalCreateUser()}
+      />
     </PageContainer>
   );
 };

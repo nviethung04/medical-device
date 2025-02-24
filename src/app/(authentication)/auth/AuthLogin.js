@@ -40,7 +40,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
       if (res.payload) {
         toast.success("Đăng nhập thành công");
         localStorage.setItem("token", res.payload.token);
-        window.location.href = "/";
+        window.location.href = "/waitpage";
       } else {
         toast.error("Đăng nhập thất bại, vui lòng kiểm tra thông tin của bạn.");
       }

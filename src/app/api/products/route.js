@@ -89,7 +89,6 @@ export async function PUT(req) {
     }
     // Convert id sang ObjectId
     const ObjectId = getObjectId(id);
-
     const userUpdateId = await validateToken(req);
 
     if (!userUpdateId) {
@@ -139,6 +138,43 @@ export async function PUT(req) {
       success: true,
       message: "Cập nhật sản phẩm thành công",
       data: { id }
+    });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const client = await clientPromise;
+    const db = client.db("products");
+    const productsCollection = db.collection("products");
+
+    const userDeleteId = await validateToken(req); // Kiểm tra người dùng có quyền không
+
+    if (!userDeleteId) {
+      return NextResponse.json(
+        { success: false, message: "Bạn cần đăng nhập để thực hiện thao tác này" },
+        { status: 401 }
+      );
+    }
+
+    const { productIds } = await req.json();
+    console.log("=======================")
+    console.log(productIds)
+
+    // Kiểm tra xem sản phẩm có tồn tại không
+    const products = await productsCollection.find({ _id: { $in: productIds } });
+
+    if (!products || products.length === 0) {
+      return NextResponse.json({ success: false, message: "Sản phẩm không tồn tại" }, { status: 404 });
+    }
+
+    // Xóa sản phẩm
+    const ret = await productsCollection.deleteMany({ _id: { $in: productIds.map(id => getObjectId(id)) } });
+    return NextResponse.json({
+      success: true,
+      message: `Xóa sản phẩm thành công ${ret.deletedCount} sản phẩm`
     });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
