@@ -60,7 +60,7 @@ const MSidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
               {/* ------------------------------------------- */}
               {/* Logo */}
               {/* ------------------------------------------- */}
-              <Logo img="/images/logos/dark-logo.svg" />
+              <Logo img="/images/logos/logo.svg" />
               <Box>
                 {/* ------------------------------------------- */}
                 {/* Sidebar Items */}
@@ -105,7 +105,7 @@ const MSidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
           {/* ------------------------------------------- */}
           {/* Logo */}
           {/* ------------------------------------------- */}
-          <Logo img="/images/logos/dark-logo.svg" />
+          <Logo img="/images/logos/logo.svg" />
           {/* ------------------------------------------- */}
           {/* Sidebar Items */}
           {/* ------------------------------------------- */}

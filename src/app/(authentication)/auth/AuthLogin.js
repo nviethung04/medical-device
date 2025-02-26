@@ -6,26 +6,35 @@ import SendRequest from "@/utils/SendRequest";
 import toast from "react-hot-toast";
 
 const AuthLogin = ({ title, subtitle, subtext }) => {
+  // Khai báo state 'account' để lưu trữ thông tin email và mật khẩu người dùng nhập vào
   const [account, setAccount] = useState({
     email: "",
     password: ""
   });
+
+  // Khai báo state 'loading' để quản lý trạng thái đang tải (loading) khi gửi yêu cầu đăng nhập
   const [loading, setLoading] = useState(false);
 
+  // Hàm validate để kiểm tra tính hợp lệ của dữ liệu người dùng nhập vào
   const validate = () => {
+    // Kiểm tra xem email có được nhập hay không
     if (!account.email) {
       toast.error("Vui lòng nhập email.");
       return false;
     }
+    // Biểu thức chính quy để kiểm tra tính hợp lệ của email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Kiểm tra xem email có hợp lệ hay không
     if (!emailRegex.test(account.email)) {
       toast.error("Vui lòng nhập email hợp lệ.");
       return false;
     }
+    // Kiểm tra xem mật khẩu có được nhập hay không
     if (!account.password) {
       toast.error("Vui lòng nhập mật khẩu.");
       return false;
     }
+    // Nếu tất cả các kiểm tra đều hợp lệ, trả về true
     return true;
   };
 
