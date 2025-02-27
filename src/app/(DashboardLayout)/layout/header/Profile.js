@@ -37,7 +37,7 @@ const Profile = () => {
           mr: 1
         }}
       >
-        Hi, {currentUser?.profile?.firstName || ""}
+        Hi, Hùng
       </Box>
 
       <IconButton
@@ -90,7 +90,7 @@ const Profile = () => {
             <IconUser width={20} />
           </ListItemIcon>
           <ListItemText>
-            {currentUser?.profile?.firstName || ""} {currentUser?.profile?.lastName || ""}
+            Nguyễn Hùng 
           </ListItemText>
         </MenuItem>
         <MenuItem>
