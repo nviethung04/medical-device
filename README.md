@@ -3,7 +3,6 @@
 ## Công Nghệ Sử Dụng
 - **Giao diện và hệ thống**: Sử dụng Next.js để xây dựng trang web.
 - **Cơ sở dữ liệu**: Lưu trữ thông tin thiết bị bằng MongoDB.
-- **Máy chủ**: Deploy trên Vercel.
 - **Các thư viện hỗ trợ**:
   - **UI**: `@mui/material`, `@mui/icons-material`, `@mui/lab`
   - **Quản lý trạng thái & API**: `axios`, `react-helmet-async`
