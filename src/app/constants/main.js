@@ -5,7 +5,6 @@ export const SITE_NAME = process.env.SITE_NAME;
 export const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 export const BASE_URL_API = process.env.APP_API_URL;
 export const GOOGLE_ANALYTICS_ID = process.env.GOOGLE_ANALYTICS_ID;
-export const MONGODB_CONNECT = process.env.MONGODB_CONNECT;
 export const CRYPTO_KEY = process.env.CRYPTO_KEY;
 export const CRYPTO_IV = process.env.CRYPTO_IV;
 

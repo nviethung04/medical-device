@@ -1,5 +1,5 @@
 import { decrypt } from "@/utils/Security";
-import getObjectId from "./getObjectId";
+import { getUUID } from "./getUUID";
 
 export function getToken(req) {
   const authorization = req.headers.get("authorization");
@@ -21,7 +21,7 @@ export const validateToken = async (req) => {
     let decryptedToken = await decrypt(token);
     decryptedToken = JSON.parse(decryptedToken);
     decryptedToken = decryptedToken.id;
-    return getObjectId(decryptedToken);
+    return getUUID(decryptedToken);
   } catch (error) {
     return null;
   }

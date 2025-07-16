@@ -1,28 +1,24 @@
-import getObjectId from "@/lib/getObjectId";
-import clientPromise from "@/lib/mongodb";
+
+import pool from "@/lib/postgresql";
 import { NextResponse } from "next/server";
 
 // API GET để lấy danh sách users
 export async function GET() {
   try {
-    const client = await clientPromise;
-    const db = client.db("products");
-    const accountsCollection = db.collection("maintenances");
+    const client = await pool.connect();
 
-    // Sắp xếp theo maintenanceDateNext tăng dần (1) hoặc giảm dần (-1)
-    const maintenances = await accountsCollection
-      .find()
-      .sort({ maintenanceDateNext: 1 }) // Thay 1 thành -1 nếu muốn sắp xếp giảm dần
-      .toArray();
+    // Sắp xếp theo maintenanceDateNext tăng dần
+    const result = await client.query('SELECT * FROM maintenances ORDER BY maintenanceDateNext ASC');
+    client.release();
 
-    return NextResponse.json({ success: true, data:maintenances });
+    return NextResponse.json({ success: true, data: result.rows });
 
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
 
-export async function POST(request) {}
+export async function POST(request) { }
 
 export async function PUT(request) {
   try {
@@ -33,15 +29,14 @@ export async function PUT(request) {
       return NextResponse.json({ success: false, error: "Invalid input" }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db("products");
-    const accountsCollection = db.collection("maintenances");
+    const client = await pool.connect();
 
-    // Cập nhật trạng thái `maintenanced` theo `_id`
-    const result = await accountsCollection.updateOne(
-      { _id: getObjectId(id) },
-      { $set: { maintenanced } }
+    // Cập nhật trạng thái `maintenanced` theo `id`
+    const result = await client.query(
+      'UPDATE maintenances SET maintenanced = $1 WHERE id = $2',
+      [maintenanced, id]
     );
+    client.release();
 
     return NextResponse.json({ success: true, message: "Maintenance updated successfully", data: "ok" });
 

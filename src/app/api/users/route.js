@@ -1,22 +1,22 @@
 import { ROLE_MANAGER } from "@/app/constants/RoleManager";
-import getObjectId from "@/lib/getObjectId";
-import clientPromise from "@/lib/mongodb";
+import pool from "@/lib/postgresql";
 import { encrypt } from "@/utils/Security";
 import { NextResponse } from "next/server";
 
 // API GET để lấy danh sách users
 export async function GET() {
   try {
-    const client = await clientPromise;
-    const db = client.db("accounts");
-    const accountsCollection = db.collection("users");
+    const client = await pool.connect();
 
-    // Lấy dữ liệu từ bảng users
-    // const users = await accountsCollection.find({}).toArray();
-    // Lấy dữ liệu tạo mới nhất lên trước
-    const users = await accountsCollection.find({}).sort({ created_at: -1 }).toArray();
+    try {
+      // Lấy dữ liệu từ bảng users (sắp xếp theo created_at mới nhất)
+      const result = await client.query('SELECT * FROM users ORDER BY created_at DESC');
+      const users = result.rows;
 
-    return NextResponse.json({ success: true, data: users });
+      return NextResponse.json({ success: true, data: users });
+    } finally {
+      client.release();
+    }
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -25,45 +25,38 @@ export async function GET() {
 // API POST để tạo một user mới
 export async function POST(req) {
   try {
-    const client = await clientPromise;
-    const db = client.db("accounts"); // Tên database của bạn
-    const accountsCollection = db.collection("users");
+    const client = await pool.connect();
 
     const { email, password, firstName, lastName, role = ROLE_MANAGER.SALE } = await req.json();
 
-    // role phải thuộc ROLE_MANAGER
-    if (!Object.values(ROLE_MANAGER).includes(role)) {
-      return NextResponse.json({ success: false, message: "Invalid role" }, { status: 400 });
+    try {
+      // role phải thuộc ROLE_MANAGER
+      if (!Object.values(ROLE_MANAGER).includes(role)) {
+        return NextResponse.json({ success: false, message: "Invalid role" }, { status: 400 });
+      }
+
+      // Kiểm tra xem email đã tồn tại chưa
+      const userCheck = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+
+      if (userCheck.rows.length > 0) {
+        return NextResponse.json({ success: false, message: "Email already exists" }, { status: 400 });
+      }
+
+      // Mã hóa mật khẩu trước khi lưu vào database
+      const hashedPassword = encrypt(password);
+
+      // Chèn user mới vào database
+      const result = await client.query(
+        'INSERT INTO users (email, password, first_name, last_name, role, active, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+        [email, hashedPassword, firstName, lastName, role, true, new Date()]
+      );
+
+      const newUser = result.rows[0];
+
+      return NextResponse.json({ success: true, message: "Tạo tài khoản thành công", data: newUser });
+    } finally {
+      client.release();
     }
-
-    // Kiểm tra xem email đã tồn tại chưa
-    const user = await accountsCollection.findOne({
-      email
-    });
-
-    if (user) {
-      return NextResponse.json({ success: false, message: "Email already exists" }, { status: 400 });
-    }
-
-    // Mã hóa mật khẩu trước khi lưu vào database
-    const hashedPassword = await encrypt(password);
-
-    const newUser = {
-      email,
-      password: hashedPassword,
-      profile: {
-        firstName,
-        lastName
-      },
-      role,
-      active: true,
-      created_at: new Date()
-    };
-
-    // Chèn user mới vào collection
-    await accountsCollection.insertOne(newUser);
-
-    return NextResponse.json({ success: true, message: "Tạo tài khoản thành công", data: newUser });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -72,49 +65,39 @@ export async function POST(req) {
 // API PUT để cập nhật thông tin user
 export async function PUT(req) {
   try {
-    const client = await clientPromise;
-    const db = client.db("accounts");
-    const accountsCollection = db.collection("users");
+    const client = await pool.connect();
 
-    const { id, profile, role, active = true } = await req.json();
+    try {
+      const { id, firstName, lastName, role, active = true } = await req.json();
 
-    // role phải thuộc ROLE_MANAGER
-    if (role && !Object.values(ROLE_MANAGER).includes(role)) {
-      return NextResponse.json({ success: false, message: "Invalid role" }, { status: 400 });
-    }
-
-    // convert id to ObjectId
-    const ObjectId = getObjectId(id);
-
-    // Kiểm tra xem user có tồn tại không
-    const user = await accountsCollection.findOne({
-      _id: ObjectId
-    });
-
-    if (!user) {
-      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
-    }
-
-    // Cập nhật thông tin user
-    await accountsCollection.updateOne(
-      {
-        _id: ObjectId
-      },
-      {
-        $set: {
-          profile,
-          role,
-          active,
-          updated_at: new Date()
-        }
+      // role phải thuộc ROLE_MANAGER
+      if (role && !Object.values(ROLE_MANAGER).includes(role)) {
+        return NextResponse.json({ success: false, message: "Invalid role" }, { status: 400 });
       }
-    );
 
-    return NextResponse.json({
-      success: true,
-      message: "Cập nhật thông tin thành công",
-      data: { id, profile, role, active }
-    });
+      // Kiểm tra xem user có tồn tại không
+      const userCheck = await client.query('SELECT id FROM users WHERE id = $1', [id]);
+
+      if (userCheck.rows.length === 0) {
+        return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+      }
+
+      // Cập nhật thông tin user
+      const result = await client.query(
+        'UPDATE users SET first_name = $1, last_name = $2, role = $3, active = $4, updated_at = $5 WHERE id = $6 RETURNING *',
+        [firstName, lastName, role, active, new Date(), id]
+      );
+
+      const updatedUser = result.rows[0];
+
+      return NextResponse.json({
+        success: true,
+        message: "Cập nhật thông tin thành công",
+        data: updatedUser
+      });
+    } finally {
+      client.release();
+    }
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

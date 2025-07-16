@@ -1,17 +1,15 @@
-import getObjectId from "@/lib/getObjectId";
-import clientPromise from "@/lib/mongodb";
+import pool from "@/lib/postgresql";
 import { NextResponse } from "next/server";
+import { v4 as uuidv4 } from 'uuid';
 
 // API GET để lấy danh sách users
 export async function GET() {
   try {
-    const client = await clientPromise;
-    const db = client.db("accounts");
-    const accountsCollection = db.collection("users");
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM users ORDER BY created_at DESC');
+    client.release();
 
-    const users = await accountsCollection.find({}).sort({ created_at: -1 }).toArray();
-
-    return NextResponse.json({ success: true, data: users });
+    return NextResponse.json({ success: true, data: result.rows });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -20,20 +18,17 @@ export async function GET() {
 // API POST để tạo một user mới
 export async function POST(req) {
   try {
-    const client = await clientPromise;
-    const db = client.db("accounts"); // Tên database của bạn
-    const accountsCollection = db.collection("users");
-
+    const client = await pool.connect();
     const { data } = await req.json();
 
-    const newUser = {
-      data,
-      active: true,
-      created_at: new Date()
-    };
+    const newUserId = uuidv4();
+    const result = await client.query(
+      'INSERT INTO users (id, data, active, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *',
+      [newUserId, JSON.stringify(data), true]
+    );
+    client.release();
 
-    // Chèn user mới vào collection
-    await accountsCollection.insertOne(newUser);
+    const newUser = result.rows[0];
 
     return NextResponse.json({ success: true, message: "Tạo tài khoản thành công", data: newUser });
   } catch (error) {
@@ -44,36 +39,23 @@ export async function POST(req) {
 // API PUT để cập nhật thông tin user
 export async function PUT(req) {
   try {
-    const client = await clientPromise;
-    const db = client.db("accounts");
-    const accountsCollection = db.collection("users");
-
+    const client = await pool.connect();
     const { id, data } = await req.json();
 
-    // convert id to ObjectId
-    const ObjectId = getObjectId(id);
-
     // Kiểm tra xem user có tồn tại không
-    const user = await accountsCollection.findOne({
-      _id: ObjectId
-    });
+    const userResult = await client.query('SELECT * FROM users WHERE id = $1', [id]);
 
-    if (!user) {
+    if (userResult.rows.length === 0) {
+      client.release();
       return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
 
     // Cập nhật thông tin user
-    await accountsCollection.updateOne(
-      {
-        _id: ObjectId
-      },
-      {
-        $set: {
-          data,
-          updated_at: new Date()
-        }
-      }
+    await client.query(
+      'UPDATE users SET data = $1, updated_at = NOW() WHERE id = $2',
+      [JSON.stringify(data), id]
     );
+    client.release();
 
     return NextResponse.json({
       success: true,

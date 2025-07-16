@@ -1,21 +1,16 @@
 import { validateToken } from "@/lib/auth";
-import getObjectId from "@/lib/getObjectId";
-import clientPromise from "@/lib/mongodb";
+import pool from "@/lib/postgresql";
 import { calculateMaintenanceDateRaw } from "@/utils/Main";
 import { NextResponse } from "next/server";
 
 // API POST để tạo một transactions mới
 export async function POST(req) {
   try {
-    const client = await clientPromise;
-    const db = client.db("products");
-    const productsCollection = db.collection("products");
-    const transactionCollection = db.collection("transactions");
-    const maintenanceCollection = db.collection("maintenances");
-
+    const client = await pool.connect();
     const objectId = await validateToken(req);
 
     if (!objectId) {
+      client.release();
       return NextResponse.json(
         { success: false, message: "Bạn cần đăng nhập để thực hiện thao tác này" },
         { status: 401 }
@@ -24,81 +19,82 @@ export async function POST(req) {
 
     const { supplier, products, address, note } = await req.json();
 
-    const supplierId = getObjectId(supplier);
+    const productsDetailResult = await client.query(
+      'SELECT * FROM products WHERE id = ANY($1)',
+      [products.map((product) => product.product)]
+    );
 
-    const productsDetail = await productsCollection
-      .find({ _id: { $in: products.map((product) => getObjectId(product.product)) } })
-      .toArray();
+    const productsDetail = productsDetailResult.rows;
+    let productsMaintenance = [];
 
-    let productsMaintenance = []
+    // Create new transaction
+    const transactionResult = await client.query(
+      'INSERT INTO transactions (supplier, products, address, note, type, status, handled_by_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *',
+      [
+        supplier,
+        JSON.stringify(productsDetail.map((product) => {
+          const productSelected = products.find((item) => item.product === product.id);
+          const dataProduct = {
+            product_id: product.id,
+            name: product.name,
+            category: product.category,
+            quantity: productSelected.quantity,
+            price: productSelected.price,
+            expiry_date: product.stock.expiry
+          };
+          productsMaintenance.push(dataProduct);
+          return dataProduct;
+        })),
+        address,
+        note,
+        "import",
+        1,
+        objectId
+      ]
+    );
 
-    const transactionNew = {
-      supplier: supplierId,
-      products: productsDetail.map((product) => {
-        const productSelected = products.find((item) => item.product === product._id.toString());
-        const dataProduct = {
-          product_id: product._id,
-          name: product.name,
-          category: product.category,
-          quantity: productSelected.quantity,
-          price: productSelected.price,
-          expiry_date: product.stock.expiry
-        };
-        productsMaintenance.push(dataProduct);
-        return dataProduct;
-      }),
-      address,
-      note,
-      type: "import",
-      status: 1,
-      handled_by_id: objectId,
-      created_at: new Date(),
-      updated_at: new Date()
-    };
+    const transactionId = transactionResult.rows[0].id;
 
-    const data = await transactionCollection.insertOne(transactionNew);
-
-    // get id inserted
-    const transactionId = data.insertedId;
-     
-    // update quantity of products
-    productsDetail.forEach(async (product) => {
-      const productSelected = products.find((item) => item.product === product._id.toString());
-      await productsCollection.updateOne(
-        { _id: product._id },
-        {
-          $set: {
-            stock: {
-              ...product.stock,
-              total: product.stock.total + productSelected.quantity,
-              available: product.stock.available + productSelected.quantity
-            }
-          }
-        }
+    // Update quantity of products
+    for (const product of productsDetail) {
+      const productSelected = products.find((item) => item.product === product.id);
+      await client.query(
+        'UPDATE products SET stock = jsonb_set(jsonb_set(stock, $1, to_jsonb((stock->>$2)::integer + $3)), $4, to_jsonb((stock->>$5)::integer + $6)) WHERE id = $7',
+        [
+          '{total}',
+          'total',
+          productSelected.quantity,
+          '{available}',
+          'available',
+          productSelected.quantity,
+          product.id
+        ]
       );
-    });
+    }
 
-    // create maintenance
-    productsMaintenance.forEach(async (product) => {
-      const maintenanceNew = {
-        product_id : product.product_id,
-        name : product.name,
-        category : product.category,
-        quantity : product.quantity,
-        price : product.price,
-        expiry_date : product.expiry_date,
-        type: "import",
-        transaction_id: transactionId,
-        supplier_id: supplierId,
-        userId: objectId,
-        created_at: new Date(),
-        maintenanceDateNext: calculateMaintenanceDateRaw(new Date(), product.expiry_date),
-        maintenanced: false
-      };
-      await maintenanceCollection.insertOne(maintenanceNew);
-    });
+    // Create maintenance records
+    for (const product of productsMaintenance) {
+      await client.query(
+        'INSERT INTO maintenances (product_id, name, category, quantity, price, expiry_date, type, transaction_id, supplier_id, userId, created_at, maintenanceDateNext, maintenanced) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), $11, $12)',
+        [
+          product.product_id,
+          product.name,
+          product.category,
+          product.quantity,
+          product.price,
+          product.expiry_date,
+          "import",
+          transactionId,
+          supplier,
+          objectId,
+          calculateMaintenanceDateRaw(new Date(), product.expiry_date),
+          false
+        ]
+      );
+    }
 
-    return NextResponse.json({ success: true, message: "Đặt hàng thành công", data: data });
+    client.release();
+    return NextResponse.json({ success: true, message: "Đặt hàng thành công", data: transactionResult.rows[0] });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

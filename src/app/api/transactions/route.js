@@ -1,48 +1,44 @@
 import { validateToken } from "@/lib/auth";
-import getObjectId from "@/lib/getObjectId";
-import clientPromise from "@/lib/mongodb";
+import pool from "@/lib/postgresql";
 import { NextResponse } from "next/server";
 
 // API GET để lấy danh sách transactions
 export async function GET() {
   try {
-    const client = await clientPromise;
-    const db = client.db("products");
-    const dbUser = client.db("accounts");
-    const transactionCollection = db.collection("transactions");
-    const userCollection = dbUser.collection("users");
-    const customerCollection = dbUser.collection("customers");
+    const client = await pool.connect();
 
     // Lấy danh sách tất cả các transactions
-    const transactions = await transactionCollection.find({}).sort({ created_at: -1 }).toArray();
+    const transactionResult = await client.query('SELECT * FROM transactions ORDER BY created_at DESC');
+    const transactions = transactionResult.rows;
 
     // Sử dụng Promise.all để đợi tất cả các `map` async hoàn tất
-    // eslint-disable-next-line no-undef
     const transactionExport = await Promise.all(
       transactions.map(async (transaction) => {
         let supplier = {};
         if (transaction.supplier) {
-          supplier = await customerCollection.findOne({ _id: transaction.supplier });
-          if (supplier) {
+          const supplierResult = await client.query('SELECT * FROM customers WHERE id = $1', [transaction.supplier]);
+          if (supplierResult.rows.length > 0) {
+            const supplierData = supplierResult.rows[0];
             supplier = {
-              _id: supplier._id,
-              name: supplier.name,
-              phone: supplier.contact_info.phone,
-              address: supplier.contact_info.address,
-              email: supplier.email
+              id: supplierData.id,
+              name: supplierData.name,
+              phone: supplierData.contact_info?.phone,
+              address: supplierData.contact_info?.address,
+              email: supplierData.email
             };
           }
         }
 
         let user = {};
         if (transaction.handled_by_id) {
-          user = await userCollection.findOne({ _id: transaction.handled_by_id });
-          if (user) {
+          const userResult = await client.query('SELECT * FROM users WHERE id = $1', [transaction.handled_by_id]);
+          if (userResult.rows.length > 0) {
+            const userData = userResult.rows[0];
             user = {
-              _id: user._id,
-              name: user.profile?.firstName + " " + user.profile?.lastName,
-              email: user.email,
-              role: user.role || 4
+              id: userData.id,
+              name: userData.profile?.firstName + " " + userData.profile?.lastName,
+              email: userData.email,
+              role: userData.role || 4
             };
           }
         }
@@ -52,7 +48,7 @@ export async function GET() {
         });
 
         return {
-          _id: transaction._id,
+          id: transaction.id,
           total_product: transaction.products?.length,
           totalPrice: totalPrice,
           address: transaction.address,
@@ -67,6 +63,7 @@ export async function GET() {
       })
     );
 
+    client.release();
     return NextResponse.json({ success: true, data: transactionExport });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -75,7 +72,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
- 
+
     return NextResponse.json({ success: true, message: "Tạo sản phẩm thành công", data: "OK" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -84,14 +81,11 @@ export async function POST(req) {
 
 export async function PUT(req) {
   try {
-    const client = await clientPromise;
-    const db = client.db("products");
-    const productsCollection = db.collection("products");
-    const transactionCollection = db.collection("transactions");
-
+    const client = await pool.connect();
     const objectId = await validateToken(req);
 
     if (!objectId) {
+      client.release();
       return NextResponse.json(
         { success: false, message: "Bạn cần đăng nhập để thực hiện thao tác này" },
         { status: 401 }
@@ -101,31 +95,36 @@ export async function PUT(req) {
     const { id, note, address, status } = await req.json();
 
     if (!id) {
+      client.release();
       return NextResponse.json({ success: false, message: "Thiếu thông tin" }, { status: 400 });
     }
 
-    const transaction = await transactionCollection.findOne({ _id: getObjectId(id) });
+    const transactionResult = await client.query('SELECT * FROM transactions WHERE id = $1', [id]);
 
-    if (!transaction) {
+    if (transactionResult.rows.length === 0) {
+      client.release();
       return NextResponse.json({ success: false, message: "Không tìm thấy transaction" }, { status: 404 });
     }
 
+    const transaction = transactionResult.rows[0];
+
     if (transaction.status === 8 || transaction.status === 9 || transaction.status === 10) {
+      client.release();
       return NextResponse.json({ success: false, message: "Transaction đã hoàn thành" }, { status: 400 });
     }
 
     // update
-    const update = {
-      $set: {
-        note: note || transaction.note,
-        address: address || transaction.address,
-        status: status || transaction.status,
-        updated_at: new Date()
-      }
-    };
+    await client.query(
+      'UPDATE transactions SET note = $1, address = $2, status = $3, updated_at = NOW() WHERE id = $4',
+      [
+        note || transaction.note,
+        address || transaction.address,
+        status || transaction.status,
+        id
+      ]
+    );
 
-    await transactionCollection.updateOne({ _id: getObjectId(id) }, update);
-
+    client.release();
     return NextResponse.json({ success: true, message: "Cập nhật thành công", data: "ok" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

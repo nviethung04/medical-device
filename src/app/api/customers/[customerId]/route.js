@@ -1,25 +1,19 @@
-import { CATEGORY_LIST } from "@/app/constants/ProductConstants";
 import { validateToken } from "@/lib/auth";
-import getObjectId from "@/lib/getObjectId";
-import clientPromise from "@/lib/mongodb";
+import pool from "@/lib/postgresql";
 import { NextResponse } from "next/server";
 
 // API GET để lấy sản phảm theo id
 
 export async function GET(req, { params }) {
   try {
-    const client = await clientPromise;
-    const db = client.db("products");
-    const transactionCollection = db.collection("transactions");
-
+    const client = await pool.connect();
     const { customerId } = params;
 
-    const ObjectId = getObjectId(customerId);
+    const transactionResult = await client.query('SELECT * FROM transactions WHERE supplier = $1', [customerId]);
+    client.release();
 
-    const transaction = await transactionCollection.find({ supplier: ObjectId }).toArray();
+    return NextResponse.json({ success: true, data: transactionResult.rows });
 
-    return NextResponse.json({ success: true, data: transaction });
-    
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

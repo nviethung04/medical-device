@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: medical_device_postgres
+    environment:
+      POSTGRES_DB: medical_device
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d/
+    networks:
+      - medical_device_network
+
+  # pgAdmin (Optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: medical_device_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@medical-device.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - medical_device_network
+
+  # Next.js Application (Optional - for full containerization)
+  app:
+    build: .
+    container_name: medical_device_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=medical_device
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+    networks:
+      - medical_device_network
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+
+networks:
+  medical_device_network:
+    driver: bridge
