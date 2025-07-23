@@ -35,40 +35,24 @@ export async function POST(req) {
       );
     }
 
-    const { name, category, stock, hardware, software, user_manual, status, price } = await req.json();
+    const { name, description, price, quantity, category } = await req.json();
 
-    const isCategory = CATEGORY_LIST.find((item) => item.value === category);
-
-    if (!isCategory) {
-      return NextResponse.json({ success: false, message: "Danh mục sản phẩm không hợp lệ" }, { status: 400 });
+    // Kiểm tra required fields
+    if (!name) {
+      client.release();
+      return NextResponse.json({ success: false, message: "Tên sản phẩm là bắt buộc" }, { status: 400 });
     }
 
-    const newProduct = {
-      name,
-      _user_added: objectId,
-      _user_updated: objectId,
-      price,
-      category,
-      stock: {
-        ...stock,
-        total: 0,
-        available: 0,
-        used: 0,
-        maintenance: 0
-      },
-      hardware,
-      software,
-      user_manual,
-      notes: "",
-      status,
-      created_at: new Date(),
-      updated_at: new Date()
-    };
+    // Insert product vào PostgreSQL
+    const result = await client.query(
+      `INSERT INTO products (id, name, description, price, quantity, category, active, created_at, updated_at) 
+       VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5, true, NOW(), NOW()) RETURNING *`,
+      [name, description || '', price || 0, quantity || 0, category || '']
+    );
 
-    // Chèn product mới vào collection
-    await productsCollection.insertOne(newProduct);
+    client.release();
 
-    return NextResponse.json({ success: true, message: "Tạo sản phẩm thành công", data: newProduct });
+    return NextResponse.json({ success: true, message: "Tạo sản phẩm thành công", data: result.rows[0] });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
