@@ -16,16 +16,23 @@ export async function GET() {
     const client = await pool.connect();
     const { currentDate, next40Days } = getNext40Days();
 
-    // Lấy các lịch trình bảo trì sắp tới (trong 40 ngày) và chưa bảo trì
+    console.log("Getting notifications...");
+    console.log("Date range:", currentDate, "to", next40Days);
+
+    // Lấy các lịch trình bảo trì sắp tới (trong 40 ngày) và chưa hoàn thành
     const upcomingMaintenancesResult = await client.query(
-      'SELECT * FROM maintenances WHERE maintenanced = false AND maintenanceDateNext >= $1 AND maintenanceDateNext <= $2',
+      "SELECT * FROM maintenances WHERE status != 'completed' AND scheduled_date >= $1 AND scheduled_date <= $2",
       [currentDate, next40Days]
     );
 
+    console.log("Maintenances found:", upcomingMaintenancesResult.rows.length);
+
     // Lấy các sản phẩm có số lượng còn lại < 10
     const lowStockProductsResult = await client.query(
-      "SELECT * FROM products WHERE stock->>'available' < '10'"
+      "SELECT * FROM products WHERE quantity < 10"
     );
+
+    console.log("Low stock products found:", lowStockProductsResult.rows.length);
 
     client.release();
 
@@ -34,23 +41,27 @@ export async function GET() {
       ...upcomingMaintenancesResult.rows.map((item) => ({
         type: "maintenance",
         productId: item.product_id,
-        transaction_id: item.transaction_id,
-        name: item.name,
-        maintenanceDateNext: item.maintenanceDateNext,
-        message: `Lịch bảo trì sắp đến cho sản phẩm "${item.name}" vào ngày ${convertDate(item.maintenanceDateNext)}.`,
+        customerId: item.customer_id,
+        maintenanceId: item.id,
+        description: item.description,
+        scheduledDate: item.scheduled_date,
+        message: `Lịch bảo trì sắp đến: "${item.description}" vào ngày ${convertDate(item.scheduled_date)}.`,
       })),
       ...lowStockProductsResult.rows.map((item) => ({
         type: "stock",
         productId: item.id,
         name: item.name,
-        available: item.stock.available,
-        message: `Sản phẩm "${item.name}" chỉ còn ${item.stock.available} trong kho.`,
+        available: item.quantity,
+        message: `Sản phẩm "${item.name}" chỉ còn ${item.quantity} trong kho.`,
       })),
     ];
+
+    console.log("Total notifications:", notify.length);
 
     return NextResponse.json({ success: true, data: notify });
 
   } catch (error) {
+    console.error("Error in notifications API:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
