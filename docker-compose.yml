@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -31,12 +29,12 @@ services:
     networks:
       - medical_device_network
 
-  # Next.js Application (Optional - for full containerization)
-  app:
-    build: .
-    container_name: medical_device_app
+  # Backend API Server
+  backend:
+    build: ./backend
+    container_name: medical_device_backend
     ports:
-      - "3000:3000"
+      - "8000:8000"
     depends_on:
       - postgres
     environment:
@@ -46,14 +44,33 @@ services:
       - POSTGRES_DB=medical_device
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres123
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     networks:
       - medical_device_network
+
+  # Frontend Next.js Application
+  frontend:
+    build: ./frontend
+    container_name: medical_device_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
     volumes:
-      - ./:/app
+      - ./frontend:/app
       - /app/node_modules
+      - /app/.next
+    networks:
+      - medical_device_network
 
 volumes:
   postgres_data:
+
 
 networks:
   medical_device_network:
