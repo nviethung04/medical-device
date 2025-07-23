@@ -1,23 +1,23 @@
-# Medical Devices Management System
+# Hệ Thống Quản Lý Thiết Bị Y Tế
 
-> **Separated Architecture**: Frontend (Next.js) + Backend (Express.js) + Database (PostgreSQL)
+> **Kiến Trúc Tách Biệt**: Frontend (Next.js) + Backend (Express.js) + Database (PostgreSQL)
 
-## 🏗️ Project Structure
+## 🏗️ Cấu Trúc Dự Án
 
 ```
 medical-device/
-├── frontend/          # Next.js Frontend Application (Port 3000)
-│   ├── src/app/      # Next.js App Router pages & components
-│   ├── public/       # Static assets
-│   └── package.json  # Frontend dependencies
-├── backend/           # Express.js Backend API (Port 8000)
+├── frontend/          # Ứng dụng Frontend Next.js (Cổng 3000)
+│   ├── src/app/      # Trang và component Next.js App Router
+│   ├── public/       # Tài nguyên tĩnh
+│   └── package.json  # Dependencies frontend
+├── backend/           # API Backend Express.js (Cổng 8000)
 │   ├── src/
-│   │   ├── routes/   # API endpoints
-│   │   ├── config/   # Database & app configuration
-│   │   └── utils/    # Utility functions
-│   └── server.js     # Express server entry point
-├── init-db/          # Database initialization scripts
-└── docker-compose.yml # Multi-service orchestration
+│   │   ├── routes/   # Các endpoint API
+│   │   ├── config/   # Cấu hình database và ứng dụng
+│   │   └── utils/    # Các hàm tiện ích
+│   └── server.js     # Điểm khởi đầu server Express
+├── init-db/          # Script khởi tạo database
+└── docker-compose.yml # Điều phối đa dịch vụ
 ```
 
 ## 🚀 Quick Start
