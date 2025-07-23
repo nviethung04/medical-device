@@ -20,27 +20,27 @@ medical-device/
 └── docker-compose.yml # Điều phối đa dịch vụ
 ```
 
-## 🚀 Quick Start
+## 🚀 Bắt Đầu Nhanh
 
-### Prerequisites
+### Yêu Cầu Tiên Quyết
 - Docker & Docker Compose
-- Node.js 18+ (for local development)
+- Node.js 18+ (cho phát triển local)
 
-### Option 1: Docker Compose (Recommended)
+### Phương án 1: Docker Compose (Khuyến nghị)
 ```bash
-# Start all services
+# Khởi động tất cả dịch vụ
 docker-compose up -d
 
-# View logs
+# Xem logs
 docker-compose logs -f
 
-# Stop services
+# Dừng dịch vụ
 docker-compose down
 ```
 
-### Option 2: Local Development
+### Phương án 2: Phát Triển Local
 ```bash
-# Start database only
+# Chỉ khởi động database
 docker-compose up postgres -d
 
 # Terminal 1: Backend
@@ -54,29 +54,29 @@ npm install
 npm run dev
 ```
 
-## 🌐 Service URLs
+## 🌐 URL Các Dịch Vụ
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000/api
-- **API Health**: http://localhost:8000/health
-- **Database Admin**: http://localhost:5050
+- **Kiểm tra API**: http://localhost:8000/health
+- **Quản trị Database**: http://localhost:5050
 - **Database**: localhost:5432
 
-## 📡 API Endpoints
+## 📡 Các Endpoint API
 
-| Endpoint | Method | Description |
+| Endpoint | Phương thức | Mô tả |
 |----------|---------|-------------|
-| `/api` | GET | API information |
-| `/api/users` | GET, POST | User management |
-| `/api/customers` | GET, POST | Customer management |
-| `/api/products` | GET, POST | Product management |
-| `/api/transactions` | GET | Transaction history |
-| `/api/notifications` | GET | Notification system |
-| `/api/maintenances` | GET | Maintenance scheduling |
+| `/api` | GET | Thông tin API |
+| `/api/users` | GET, POST | Quản lý người dùng |
+| `/api/customers` | GET, POST | Quản lý khách hàng |
+| `/api/products` | GET, POST | Quản lý sản phẩm |
+| `/api/transactions` | GET | Lịch sử giao dịch |
+| `/api/notifications` | GET | Hệ thống thông báo |
+| `/api/maintenances` | GET | Lập lịch bảo trì |
 
-## 🔧 Environment Variables
+## 🔧 Biến Môi Trường
 
-Copy `.env.example` to `.env` and configure:
+Sao chép `.env.example` thành `.env` và cấu hình:
 
 ```env
 # Database
@@ -86,35 +86,35 @@ POSTGRES_DB=medical_device
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres123
 
-# Service URLs
+# URL Dịch vụ
 FRONTEND_URL=http://localhost:3000
 BACKEND_URL=http://localhost:8000
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
 ```
 
-## 🏗️ Architecture Benefits
+## 🏗️ Lợi Ích Kiến Trúc
 
-- **🔄 Separation of Concerns**: Complete frontend/backend separation
-- **📈 Independent Scaling**: Scale services individually
-- **🛠️ Technology Flexibility**: Different tech stacks per service
-- **👥 Team Collaboration**: Parallel development workflows
-- **🚀 Deployment Flexibility**: Deploy to different environments
+- **🔄 Tách Biệt Mối Quan Tâm**: Tách biệt hoàn toàn frontend/backend
+- **📈 Mở Rộng Độc Lập**: Mở rộng từng dịch vụ riêng biệt
+- **🛠️ Linh Hoạt Công Nghệ**: Các tech stack khác nhau cho mỗi dịch vụ
+- **👥 Hợp Tác Nhóm**: Quy trình phát triển song song
+- **🚀 Linh Hoạt Triển Khai**: Triển khai đến các môi trường khác nhau
 
-## 📝 Development Workflow
+## 📝 Quy Trình Phát Triển
 
-1. **Backend Development**: API-first approach
-2. **Frontend Development**: Consume backend APIs
-3. **Database Changes**: Update init-db scripts
-4. **Testing**: Test each service independently
+1. **Phát triển Backend**: Tiếp cận API-first
+2. **Phát triển Frontend**: Sử dụng backend APIs
+3. **Thay đổi Database**: Cập nhật script init-db
+4. **Kiểm thử**: Kiểm thử từng dịch vụ độc lập
 
-## 🚢 Deployment
+## 🚢 Triển Khai
 
-### Production Docker Build
+### Build Docker Production
 ```bash
 docker-compose -f docker-compose.prod.yml up --build
 ```
 
-### Individual Service Deployment
+### Triển Khai Dịch Vụ Riêng Biệt
 ```bash
 # Frontend
 cd frontend && npm run build && npm start
@@ -127,29 +127,29 @@ cd backend && npm start
 
 ### Frontend
 - **Next.js 15.4.3** - React framework
-- **Material-UI** - Component library
+- **Material-UI** - Thư viện component
 - **Axios** - HTTP client
-- **React Hot Toast** - Notifications
+- **React Hot Toast** - Thông báo
 
 ### Backend
 - **Express.js** - Web framework
 - **PostgreSQL** - Database
-- **CORS** - Cross-origin resource sharing
+- **CORS** - Chia sẻ tài nguyên cross-origin
 - **Morgan** - HTTP request logger
 
-### Infrastructure
+### Hạ Tầng
 - **Docker** - Containerization
-- **Docker Compose** - Multi-container orchestration
-- **pgAdmin** - Database administration
+- **Docker Compose** - Điều phối multi-container
+- **pgAdmin** - Quản trị database
 
-## 🤝 Contributing
+## 🤝 Đóng Góp
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+1. Fork repository
+2. Tạo feature branch (`git checkout -b feature/tinh-nang-tuyet-voi`)
+3. Commit thay đổi (`git commit -m 'Thêm tính năng tuyệt vời'`)
+4. Push lên branch (`git push origin feature/tinh-nang-tuyet-voi`)
+5. Mở Pull Request
 
-## 📄 License
+## 📄 Giấy Phép
 
-This project is licensed under the MIT License.
+Dự án này được cấp phép theo MIT License.
